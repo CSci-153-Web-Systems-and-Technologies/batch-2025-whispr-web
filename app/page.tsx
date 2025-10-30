@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LandingScreen() {
   return (
@@ -12,7 +13,9 @@ export default function LandingScreen() {
         <div className="flex flex-col justify-center mb-10 gap-6.25">
           <h1 className="font-bold text-7xl text-foreground">Say It Without Saying Who.</h1>
           <p className="text-muted-foreground ">Connect with someone nearby who understands — safely, anonymously, and without judgment.</p>
-          <Button className="w-full mx-auto mt-8 cursor-pointer text-base" size="lg">Get Started</Button>
+          <Link href="/login">
+            <Button className="w-full mx-auto mt-8 cursor-pointer text-base" size="lg">Get Started</Button>
+          </Link>
         </div>
         <div className="flex justify-center items-center ml-auto">
           <div className="grid grid-cols-2 w-auto gap-6.75 -mt-6">
