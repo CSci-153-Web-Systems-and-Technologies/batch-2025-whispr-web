@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function LandingScreen() {
   return (
-    <div className="flex flex-col min-h-screen items-start justify-start bg-background relative p-8">
+    <div className="flex flex-col min-h-screen items-start justify-start p-8 bg-background">
       <div className="flex items-center justify-start w-full gap-2">
         <img src="/whispr-final.png" alt="Whispr Logo" className="h-9 aspect-square"/>
         <span className="text-primary font-semibold text-2xl mb-1">WHISPR</span>
