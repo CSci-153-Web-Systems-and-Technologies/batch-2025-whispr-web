@@ -27,8 +27,6 @@ const Login = () => {
 
     setErrors(newErrors);
     if(Object.keys(newErrors).length > 0) return;
-
-    console.log("Form submitted");
   }
 
   const handleChange = (
