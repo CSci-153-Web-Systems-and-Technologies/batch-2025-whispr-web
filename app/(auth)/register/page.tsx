@@ -6,12 +6,16 @@ import { Button } from '@/components/ui/button'
 import FormField from '@/components/FormField'
 import { generateAnonId, generatePassword } from '@/lib/generateCredential'
 import { Download } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { saveCredentials } from '@/lib/storage'
 
 const page = () => {
   const [credentials, setCredentials] = useState<{anonId: string, password: string}>({
     anonId: '',
     password: ''
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     const newAnonId = generateAnonId();
@@ -36,12 +40,24 @@ const page = () => {
     URL.revokeObjectURL(link.href)
   }
 
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    saveCredentials({
+      anonymousId: credentials.anonId,
+      password: credentials.password,
+      createdAt: new Date().toISOString()
+    })
+
+    router.push('/login');
+  }
+
   return (
     <>
       <h3 className='text-primary text-2xl font-bold mb-5 text-center' >Generate Your Access Key</h3>
 
       {/* Form Fields */}
-      <form className='w-full flex flex-col items-center gap-4'>
+      <form onSubmit={handleSignUp} className='w-full flex flex-col items-center gap-4'>
         <div className='flex flex-col gap-4 w-full'>
           <FormField 
             id="anonymousId"
@@ -56,8 +72,7 @@ const page = () => {
             value={credentials.password}
             type='text'
             isReadOnly={true}
-          />
-          
+          />  
         </div>
 
         <div className='w-full'>
