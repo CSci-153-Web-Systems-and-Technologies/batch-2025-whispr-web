@@ -21,7 +21,6 @@ export function saveCredentials(credential: WhisprCredential) {
 
 export function getCredentials(): WhisprCredential[] {
   if (typeof window === "undefined") return [];
-
   const existing = localStorage.getItem(STORAGE_KEY);
   return existing ? JSON.parse(existing) : [];
 }
