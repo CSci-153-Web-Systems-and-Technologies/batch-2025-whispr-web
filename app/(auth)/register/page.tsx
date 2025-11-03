@@ -1,11 +1,19 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import FormField from '@/components/FormField'
+import { generateAnonId } from '@/lib/generateAnonId'
 
 const page = () => {
+  const [anonId, setAnonId] = useState("");
+
+  useEffect(() => {
+    const newAnonId = generateAnonId();
+    setAnonId(newAnonId);
+  }, []);
+
   return (
     <>
       <h3 className='text-primary text-2xl font-bold mb-5 text-center' >Generate Your Access Key</h3>
@@ -16,7 +24,7 @@ const page = () => {
           <FormField 
             id="anonymousId"
             label="Anonymous ID"
-            value="user_1234567890 (test value)"
+            value={anonId}
             type='text'
             isReadOnly={true}
           />
