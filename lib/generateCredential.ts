@@ -11,3 +11,11 @@ export function generateAnonId():string  {
 
   return `${randomAdjective}${randomBeing}${randomNumber}`;
 }
+
+export function generatePassword(length = 12): string {
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}";
+  const array = new Uint32Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, (num) => charset[num % charset.length]).join("");
+}

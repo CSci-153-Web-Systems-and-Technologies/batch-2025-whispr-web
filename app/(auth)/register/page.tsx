@@ -4,14 +4,23 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import FormField from '@/components/FormField'
-import { generateAnonId } from '@/lib/generateAnonId'
+import { generateAnonId, generatePassword } from '@/lib/generateCredential'
 
 const page = () => {
-  const [anonId, setAnonId] = useState("");
+  const [credentials, setCredentials] = useState<{anonId: string, password: string}>({
+    anonId: '',
+    password: ''
+  });
+
+  
 
   useEffect(() => {
     const newAnonId = generateAnonId();
-    setAnonId(newAnonId);
+    const newPassword = generatePassword();
+    setCredentials({
+      anonId: newAnonId,
+      password: newPassword
+    });
   }, []);
 
   return (
@@ -24,14 +33,14 @@ const page = () => {
           <FormField 
             id="anonymousId"
             label="Anonymous ID"
-            value={anonId}
+            value={credentials.anonId}
             type='text'
             isReadOnly={true}
           />
           <FormField 
             id="password"
             label="Password"
-            value="passuser_987654321 (test value)"
+            value={credentials.password}
             type='text'
             isReadOnly={true}
           />
