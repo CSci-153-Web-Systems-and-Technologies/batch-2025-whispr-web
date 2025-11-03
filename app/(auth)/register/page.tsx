@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import FormField from '@/components/FormField'
 import { generateAnonId, generatePassword } from '@/lib/generateCredential'
+import { Download } from 'lucide-react'
 
 const page = () => {
   const [credentials, setCredentials] = useState<{anonId: string, password: string}>({
     anonId: '',
     password: ''
   });
-
-  
 
   useEffect(() => {
     const newAnonId = generateAnonId();
@@ -22,6 +21,20 @@ const page = () => {
       password: newPassword
     });
   }, []);
+
+  const handleSave = () => {
+    const content = `Your Whispr Credentials\n\nAnonymous ID: ${credentials.anonId}\nPassword: ${credentials.password}\n\nKeep this file private and secure.`
+
+    const blob = new Blob([content], { type: "text/plain" })
+    const link = document.createElement("a")
+    link.href = URL.createObjectURL(blob)
+    link.download = "whispr_credentials.txt"
+
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(link.href)
+  }
 
   return (
     <>
@@ -48,7 +61,12 @@ const page = () => {
         </div>
 
         <div className='w-full'>
-          <Button variant="secondary" type='button' className='w-full mt-5 cursor-pointer'>Save Credentials</Button>
+          <Button variant="secondary" type='button' className='w-full mt-5 cursor-pointer'
+            onClick={handleSave}
+          >
+            <Download />
+            Save Credentials
+          </Button>
           <Button type='submit' className='w-full mt-2 cursor-pointer'>Sign Up</Button>
         </div>
       </form>
