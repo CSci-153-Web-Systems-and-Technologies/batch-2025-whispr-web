@@ -6,7 +6,9 @@ interface FormFieldProps {
   label: string;
   id: string;
   type: string;
-  error: string | undefined;
+  value?: string;
+  error?: string | undefined;
+  isReadOnly?: boolean;
   spellCheck?: boolean;
   autoComplete?: string;
   isRequired?: boolean;
@@ -17,7 +19,9 @@ const FormField: React.FC<FormFieldProps> = ({
   label, 
   id, 
   type, 
+  value,
   error,
+  isReadOnly = false,
   spellCheck=false,
   autoComplete="on",
   onChange = () => {},
@@ -29,11 +33,14 @@ const FormField: React.FC<FormFieldProps> = ({
         id={id}
         type= {type}
         name={id}
+        value={value}
         placeholder={label}
         spellCheck={spellCheck} 
         autoComplete={autoComplete}
         aria-invalid={!!error}
         onChange={onChange}
+        readOnly={isReadOnly}
+        className={isReadOnly ? 'bg-border cursor-copy' : ''}
       />
       {!!error && (
         <p className='text-destructive text-sm absolute top-0 right-0'>{error}</p>
