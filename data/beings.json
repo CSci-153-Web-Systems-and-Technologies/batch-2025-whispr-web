@@ -1,0 +1,24 @@
+{
+  "beings": [
+    "Fox", "Owl", "Cat", "Panda", "Deer",
+    "Koala", "Dolphin", "Otter", "Swan", "Hedgehog",
+    "Rabbit", "Turtle", "Wolf", "Bear", "Raven",
+    "Finch", "Penguin", "Parrot", "Seal", "Whale",
+    "Butterfly", "Hummingbird", "Hawk", "Lynx", "Eagle",
+    "Moose", "Goose", "Crane", "Fawn", "Chipmunk",
+    "Falcon", "Sparrow", "Coyote", "Badger", "Beaver",
+    "Lamb", "Horse", "Leopard", "Falcon", "Jay",
+    "Crow", "Duck", "Chickadee", "Goldfinch", "Heron",
+    "Panther", "Foxglove", "Dove", "Sealion", "Giraffe",
+    "Dreamer", "Companion", "Seeker", "Wanderer", "Friend",
+    "Traveler", "Soul", "Heart", "Voice", "Whisperer",
+    "Spirit", "Giver", "Nomad", "Guardian", "Light",
+    "Echo", "Shadow", "Guide", "Watcher", "Keeper",
+    "Muse", "Companion", "Gentle", "Vision", "Drifter",
+    "Storyteller", "Comforter", "Wisher", "Thinker", "Pathfinder",
+    "Traveler", "Wayfarer", "Hope", "Star", "Scribe",
+    "Songbird", "Cloud", "Breeze", "Ember", "Rain",
+    "Spark", "Dawn", "Glow", "Willow", "Stone",
+    "River", "Sky", "Leaf", "Flame", "Echoheart"
+  ]
+}
