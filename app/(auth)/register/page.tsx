@@ -8,6 +8,7 @@ import { generateAnonId, generatePassword } from '@/lib/generateCredential'
 import { Download } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { saveCredentials } from '@/lib/storage'
+import { toast } from 'sonner'
 
 const page = () => {
   const [credentials, setCredentials] = useState<{anonId: string, password: string}>({
@@ -49,6 +50,7 @@ const page = () => {
       createdAt: new Date().toISOString()
     })
 
+    toast.success("Account Created!")
     router.push('/login');
   }
 

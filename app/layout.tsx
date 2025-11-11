@@ -23,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${interSans.variable} relative antialiased`}
       >
-        <Toaster position="top-center" richColors/>
+        <Toaster position="top-right" richColors/>
         {children}
       </body>
     </html>

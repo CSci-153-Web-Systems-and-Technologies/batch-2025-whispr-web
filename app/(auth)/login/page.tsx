@@ -6,6 +6,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@radix-ui/react-label'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { getCredentials } from '@/lib/storage'
+import { toast } from 'sonner'
 
 interface AuthErrorTypes{
   anonIdError?: string,
@@ -14,6 +17,7 @@ interface AuthErrorTypes{
 
 const Login = () => {
   const [errors, setErrors] = useState<AuthErrorTypes>({});
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +31,19 @@ const Login = () => {
 
     setErrors(newErrors);
     if(Object.keys(newErrors).length > 0) return;
+
+    const credentials = getCredentials();
+    const user = credentials.find(cred => { 
+      return cred.anonymousId === anonId &&
+              cred.password === password;
+    })
+
+    if (user) {
+      toast.success("Login success!")
+      router.push('/home');
+    } else {
+      toast.error("Invalid Credentials.")
+    }
   }
 
   const handleChange = (
