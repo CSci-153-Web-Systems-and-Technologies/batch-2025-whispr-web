@@ -16,9 +16,10 @@ interface AuthErrorTypes{
 
 const Login = () => {
   const [errors, setErrors] = useState<AuthErrorTypes>({});
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const anonId = (formData.get("anonymousId") as string)?.trim();
@@ -31,6 +32,28 @@ const Login = () => {
     setErrors(newErrors);
     if(Object.keys(newErrors).length > 0) return;
 
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ anonId, password })
+      });
+
+      const data = await response.json();
+
+      if(!response.ok) {
+        toast.error(data.error || "Login failed. Please try again.");
+        return;
+      }
+
+      toast.success("Logged in successfully!");
+      router.push('/home');
+
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
     
   }
 

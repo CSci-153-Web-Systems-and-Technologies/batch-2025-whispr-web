@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const dummyEmail = `${anonId}@whispr.app`;
+    const dummyEmail = `${anonId}@whispr.vercel.app`;
 
     const supabase = await createClient();
     const { data, error } = await supabase.auth.signInWithPassword({
