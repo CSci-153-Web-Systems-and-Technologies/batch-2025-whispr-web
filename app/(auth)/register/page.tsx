@@ -7,14 +7,15 @@ import FormField from '@/components/FormField'
 import { generateAnonId, generatePassword } from '@/lib/generateCredential'
 import { Download } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { saveCredentials } from '@/lib/storage'
 import { toast } from 'sonner'
+import { Spinner } from '@/components/ui/spinner'
 
 const page = () => {
   const [credentials, setCredentials] = useState<{anonId: string, password: string}>({
     anonId: '',
     password: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -41,17 +42,36 @@ const page = () => {
     URL.revokeObjectURL(link.href)
   }
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    saveCredentials({
-      anonymousId: credentials.anonId,
-      password: credentials.password,
-      createdAt: new Date().toISOString()
-    })
 
-    toast.success("Account Created!")
-    router.push('/login');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          anonId: credentials.anonId,
+          password: credentials.password
+        })
+      });
+
+      const data = await response.json();
+
+      if(!response.ok) {
+        toast.error(data.error || "Failed to create account");
+        return;
+      }
+
+      toast.success("Account created successfully!");
+      router.push('/login')
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+      console.error("Error during sign up:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -84,7 +104,19 @@ const page = () => {
             <Download />
             Save Credentials
           </Button>
-          <Button type='submit' className='w-full mt-2 cursor-pointer'>Sign Up</Button>
+          <Button 
+            type='submit'
+            disabled={isLoading} 
+            className='w-full mt-2 cursor-pointer'>
+              {
+                isLoading ? 
+                <>
+                  <Spinner /> 
+                  Creating Account...
+                </> :
+                "Sign Up"
+              }
+          </Button>
         </div>
       </form>
 

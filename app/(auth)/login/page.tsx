@@ -7,7 +7,6 @@ import { Label } from '@radix-ui/react-label'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { getCredentials } from '@/lib/storage'
 import { toast } from 'sonner'
 
 interface AuthErrorTypes{
@@ -17,9 +16,10 @@ interface AuthErrorTypes{
 
 const Login = () => {
   const [errors, setErrors] = useState<AuthErrorTypes>({});
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const anonId = (formData.get("anonymousId") as string)?.trim();
@@ -32,18 +32,29 @@ const Login = () => {
     setErrors(newErrors);
     if(Object.keys(newErrors).length > 0) return;
 
-    const credentials = getCredentials();
-    const user = credentials.find(cred => { 
-      return cred.anonymousId === anonId &&
-              cred.password === password;
-    })
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ anonId, password })
+      });
 
-    if (user) {
-      toast.success("Login success!")
+      const data = await response.json();
+
+      if(!response.ok) {
+        toast.error(data.error || "Login failed. Please try again.");
+        return;
+      }
+
+      toast.success("Logged in successfully!");
       router.push('/home');
-    } else {
-      toast.error("Invalid Credentials.")
+
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
+    
   }
 
   const handleChange = (
