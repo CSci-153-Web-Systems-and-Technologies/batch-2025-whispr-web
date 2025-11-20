@@ -3,7 +3,6 @@
 import React, { useEffect, useState }from 'react'
 import { Button } from './ui/button'
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import { House, User } from 'lucide-react';
 
 
