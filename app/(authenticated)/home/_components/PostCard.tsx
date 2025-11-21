@@ -15,10 +15,12 @@ import { Button } from '@/components/ui/button'
 import { Heart } from 'lucide-react'
 
 const PostCard = () => {
-  const [isLiked, setIsLiked] = useState(false)
+  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   const handleLike = () => {
     setIsLiked(!isLiked)
+    setLikes(isLiked ? likes - 1 : likes + 1);
   }
 
   return (
@@ -40,7 +42,7 @@ const PostCard = () => {
           <Button variant="ghost" onClick={handleLike} className='hover:bg-transparent hover:text-destructive hover:scale-105'>
             <Heart fill={isLiked ? "red" : "none"} stroke={isLiked ? "none" : "black"} className='h-6! w-6!'/>
           </Button>
-          <span className='text-sm'>0 likes</span>
+          <span className='text-sm'>{likes} likes</span>
         </CardAction>
       </CardFooter>
     </Card>
