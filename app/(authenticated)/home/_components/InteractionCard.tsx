@@ -13,7 +13,7 @@ import { Heart, Search } from 'lucide-react'
 
 const InteractionCard = () => {
   return (
-    <Card className='w-130'>
+    <Card className='w-160'>
       <CardHeader>
         <CardTitle>Choose your role</CardTitle>
         <CardDescription>
@@ -22,13 +22,13 @@ const InteractionCard = () => {
       </CardHeader>
       <CardContent className='flex justify-center items-center my-auto gap-3 w-full'>
         <CardAction className='flex-1'>
-          <Button className='w-full h-10'>
+          <Button className='w-full h-11 text-base'>
             <Search />
             Venter
           </Button>
         </CardAction>
         <CardAction className='flex-1'>
-          <Button variant="secondary" className='w-full h-10'>
+          <Button variant="secondary" className='w-full h-11 text-base'>
             <Heart fill='black' />
             Listener
           </Button>

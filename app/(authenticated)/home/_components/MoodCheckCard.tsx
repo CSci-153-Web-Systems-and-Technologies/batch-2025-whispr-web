@@ -13,7 +13,7 @@ import Image from 'next/image'
 
 const MoodCheckCard = () => {
   return (
-    <Card className='flex w-130'>
+    <Card className='flex w-160'>
       <CardHeader>
           <CardTitle>How are you feeling?</CardTitle>
           <CardDescription>
