@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     const dummyEmail = `${anonId}@whispr.vercel.app`;
 
     const supabase = await createClient();
+
     const { data, error } = await supabase.auth.signUp({
       email: dummyEmail,
       password: password,
@@ -33,6 +34,24 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     };
+
+    const { user } = data;
+    const {error: insertError} = await supabase
+      .from('anon_users')
+      .insert({
+        id: user?.id,
+        anon_id: anonId,
+        mood_streak: 0,
+        listening_pts: 0,
+        venting_pts: 0,
+      });
+
+      if(insertError) {
+        return NextResponse.json(
+          { error: insertError.message },
+          { status: 400 }
+        );
+      }
 
     return NextResponse.json(
       { message: "User registered successfully", data: data },
