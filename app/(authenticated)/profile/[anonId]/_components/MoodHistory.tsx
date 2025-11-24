@@ -18,7 +18,7 @@ const MoodHistory = () => {
   const numberOfDays = new Date(year, date.getMonth() + 1, 0).getDate();
 
   return (
-    <Card className='w-125'>
+    <Card className='w-125 h-max'>
       <CardHeader>
         <CardTitle>Mood History</CardTitle>
         <CardDescription>

@@ -2,7 +2,7 @@ import React from 'react'
 import MoodCheckCard from './_components/MoodCheckCard'
 import { Inter } from 'next/font/google'
 import InteractionCard from './_components/InteractionCard'
-import PostCard from './_components/PostCard'
+import PostCard from '../../../components/PostCard'
 import CommunityWall from './_components/CommunityWall'
 import CommunityStats from './_components/CommunityStats'
 
