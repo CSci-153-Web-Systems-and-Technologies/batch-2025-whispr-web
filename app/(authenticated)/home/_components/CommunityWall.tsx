@@ -1,5 +1,5 @@
 import React from 'react'
-import PostCard from './PostCard'
+import PostCard from '../../../../components/PostCard'
 import PostInput from './PostInput'
 
 const CommunityWall = () => {

@@ -6,9 +6,9 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }>) {
   return(
-    <>
+    <main>
       <Navbar />
       {children}
-    </>
+    </main>
   )
 }
