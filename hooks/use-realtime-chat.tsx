@@ -6,21 +6,22 @@ import { v4 as uuidv4 } from "uuid";
 
 interface UseRealtimeChatProps {
   roomName: string
+  senderId: string
   username: string
 }
 
 export interface ChatMessage {
   id: string
+  session_id: string
+  sender_id: string
+  username?: string
   content: string
-  user: {
-    name: string
-  }
-  createdAt: string
+  timestamp: string
 }
 
 const EVENT_MESSAGE_TYPE = 'message'
 
-export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
+export function useRealtimeChat({ roomName, username, senderId }: UseRealtimeChatProps) {
   const supabase = createClient()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null)
@@ -54,11 +55,11 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
 
       const message: ChatMessage = {
         id: uuidv4(),
+        session_id: roomName,
+        sender_id: senderId,
         content,
-        user: {
-          name: username,
-        },
-        createdAt: new Date().toISOString(),
+        username: username,
+        timestamp: new Date().toISOString(),
       }
 
       // Update local state immediately for the sender
@@ -70,7 +71,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
         payload: message,
       })
     },
-    [channel, isConnected, username]
+    [channel, isConnected, username, senderId, roomName]
   )
 
   return { messages, sendMessage, isConnected }

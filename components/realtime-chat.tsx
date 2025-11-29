@@ -15,6 +15,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 interface RealtimeChatProps {
   roomName: string
   username: string
+  senderId: string
   onMessage?: (messages: ChatMessage[]) => void
   messages?: ChatMessage[]
 }
@@ -27,9 +28,11 @@ interface RealtimeChatProps {
  * @param messages - The messages to display in the chat. Useful if you want to display messages from a database.
  * @returns The chat component
  */
+
 export const RealtimeChat = ({
   roomName,
   username,
+  senderId,
   onMessage,
   messages: initialMessages = [],
 }: RealtimeChatProps) => {
@@ -41,6 +44,7 @@ export const RealtimeChat = ({
     isConnected,
   } = useRealtimeChat({
     roomName,
+    senderId,
     username,
   })
   const [newMessage, setNewMessage] = useState('')
@@ -53,7 +57,7 @@ export const RealtimeChat = ({
       (message, index, self) => index === self.findIndex((m) => m.id === message.id)
     )
     // Sort by creation date
-    const sortedMessages = uniqueMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+    const sortedMessages = uniqueMessages.sort((a, b) => a.timestamp.localeCompare(b.timestamp))
 
     return sortedMessages
   }, [initialMessages, realtimeMessages])
@@ -83,16 +87,16 @@ export const RealtimeChat = ({
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
       {/* Messages */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4 relative">
         {allMessages.length === 0 ? (
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground absolute bottom-10 left-0 right-0">
             No messages yet. Start the conversation!
           </div>
         ) : null}
         <div className="space-y-1">
           {allMessages.map((message, index) => {
             const prevMessage = index > 0 ? allMessages[index - 1] : null
-            const showHeader = !prevMessage || prevMessage.user.name !== message.user.name
+            const showHeader = !prevMessage || prevMessage.sender_id !== message.sender_id
 
             return (
               <div
@@ -101,7 +105,7 @@ export const RealtimeChat = ({
               >
                 <ChatMessageItem
                   message={message}
-                  isOwnMessage={message.user.name === username}
+                  isOwnMessage={message.sender_id === senderId}
                   showHeader={showHeader}
                 />
               </div>
