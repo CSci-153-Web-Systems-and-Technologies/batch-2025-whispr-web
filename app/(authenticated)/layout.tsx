@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import { HeaderWrapper } from "@/components/HeaderWrapper";
 
 export default function AuthenticatedLayout({
   children,
@@ -7,7 +7,7 @@ export default function AuthenticatedLayout({
 }>) {
   return(
     <main>
-      <Navbar />
+      <HeaderWrapper />
       {children}
     </main>
   )

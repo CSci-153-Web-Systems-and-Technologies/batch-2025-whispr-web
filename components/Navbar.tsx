@@ -22,6 +22,8 @@ const Navbar = () => {
     }
   }, [pathname]);
 
+  if (pathname.startsWith('/chat')) return null;
+
   return (
     <div className='flex items-center justify-between py-4 px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
       <span className='text-primary text-xl font-medium'>WHISPR</span>
