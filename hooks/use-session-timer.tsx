@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 // in seconds
 const WARNING_THRESHOLD = 15
@@ -12,6 +13,23 @@ export function useSessionTimer(sessionId: string) {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null)
   const supabase = createClient()
   const router = useRouter()
+
+  const handleSessionEnd = async () => {
+    const response = await fetch('/api/chat/end', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionId }),
+    })
+
+    if (!response.ok) {
+      toast.error('Failed to end session properly.');
+      return;
+    }
+
+    toast.success('Chat session has ended.');
+  }
 
   // Fetch expiration time
   useEffect(() => {
@@ -37,6 +55,7 @@ export function useSessionTimer(sessionId: string) {
     if (secondsLeft === null) return
 
     if (secondsLeft <= 0) {
+      handleSessionEnd();
       router.push('/home')
       return
     }
