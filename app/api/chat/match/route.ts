@@ -12,6 +12,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { role } = await req.json();
+
   // 1. Check if user already has an active session FIRST
   const { data: myExistingSession } = await supabase
     .from("chat_sessions")
@@ -30,7 +32,10 @@ export async function POST(req: Request) {
 
   // 2. Add user to waiting queue
   await supabase.from("waiting_queue").upsert(
-    { user_id: user.id },
+    { 
+      user_id: user.id,
+      role: role,
+    },
     { onConflict: "user_id" }
   );
 
@@ -45,21 +50,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ status: "waiting" });
   }
 
-  const userA = waiting[0].user_id;
-  const userB = waiting[1].user_id;
+  const [u1, u2] = waiting;
 
   // Guard: ensure we have two distinct user ids
-  if (!userA || !userB || userA === userB) {
+  if (!u1.user_id || !u2.user_id || u1.user_id === u2.user_id) {
     return NextResponse.json({ status: "waiting" });
   }
+
+  const isU1First = u1.user_id < u2.user_id;
+  const userA = isU1First ? u1 : u2;
+  const userB = isU1First ? u2 : u1;
 
   // 4. Try to create session with consistent ordering
   const { data: createdSession, error: sessionError } = await supabase
     .from("chat_sessions")
     .insert({
-      user_a: userA < userB ? userA : userB, // Smaller ID first
-      user_b: userA < userB ? userB : userA, // Larger ID second
-      expires_at: new Date(Date.now() + 10 * 60000).toISOString(),
+      user_a: userA.user_id,
+      user_b: userB.user_id,
+      user_a_role: userA.role,
+      user_b_role: userB.role,
+      expires_at: new Date(Date.now() + 60 * 1000 * 10).toISOString(),
       is_active: true,
     })
     .select("id")
@@ -88,7 +98,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // If we still can't find a session, return error
     return NextResponse.json(
       { status: "error", message: "Failed to create or find session" },
       { status: 500 }
