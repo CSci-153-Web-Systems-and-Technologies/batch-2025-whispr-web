@@ -4,13 +4,13 @@ import React, {useEffect, useState} from "react"
 import { createClient } from '@/utils/supabase/client';
 import { toast } from "sonner";
 
-export type CurrentUser = {
+export type User = {
   id: string;
   name: string; // anon_id
 }
 
 export function useCurrentUser() {
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
