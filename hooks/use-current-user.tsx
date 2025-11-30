@@ -3,13 +3,16 @@
 import React, {useEffect, useState} from "react"
 import { createClient } from '@/utils/supabase/client';
 import { toast } from "sonner";
+import type { UserRole } from "@/app/(authenticated)/home/_components/InteractionCard";
+
 
 export type User = {
   id: string;
   name: string; // anon_id
+  role?: UserRole;
 }
 
-export function useCurrentUser() {
+export function useCurrentUser(sessionId: string) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const supabase = createClient();
 
@@ -26,6 +29,17 @@ export function useCurrentUser() {
 
           if (data) {
             setCurrentUser({ id: user.id, name: data.anon_id });
+          }
+
+          const { data: session } = await supabase
+            .from('chat_sessions')
+            .select('user_a, user_b, user_a_role, user_b_role')
+            .eq('id', sessionId)
+            .single();
+
+          if (session) {
+            const role = session.user_a === user.id ? session.user_a_role : session.user_b_role;
+            setCurrentUser(prev => prev ? { ...prev, role } : null);
           }
         }
       } catch (error) {
