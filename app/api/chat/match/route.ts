@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       user_b: userB.user_id,
       user_a_role: userA.role,
       user_b_role: userB.role,
-      expires_at: new Date(Date.now() + 60 * 1000 * 10).toISOString(),
+      expires_at: new Date(Date.now() + 60 * 1000 * 2).toISOString(),
       is_active: true,
     })
     .select("id")
@@ -80,15 +80,14 @@ export async function POST(req: Request) {
 
   // 6. If insert failed (likely duplicate), fetch the existing session
   if (sessionError) {
-    console.log("Session creation failed, fetching existing:", sessionError);
+    console.log("Session creation failed, fetching existing.");
     
     const { data: existingSession } = await supabase
       .from("chat_sessions")
       .select("id")
-      .or(`user_a.eq.${userA},user_b.eq.${userA}`)
-      .or(`user_a.eq.${userB},user_b.eq.${userB}`)
+      .eq("user_a", userA.user_id)
+      .eq("user_b", userB.user_id) 
       .gt("expires_at", new Date().toISOString())
-      .limit(1)
       .maybeSingle();
 
     if (existingSession) {

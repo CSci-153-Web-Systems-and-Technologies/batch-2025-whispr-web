@@ -20,7 +20,7 @@ const ChatHeader = ({ sessionId }: { sessionId: string }) => {
   return (
     <nav className='flex items-center justify-between py-4 px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
       {/* Partner Info */}
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-3'>
         <CustomAvatar>{getInitials(partner.name)}</CustomAvatar>
         <div className='flex flex-col gap-1'>
           <span className='font-medium text-base'>{partner.name}</span>

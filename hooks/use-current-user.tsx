@@ -12,7 +12,7 @@ export type User = {
   role?: UserRole;
 }
 
-export function useCurrentUser(sessionId: string) {
+export function useCurrentUser(sessionId?: string) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const supabase = createClient();
 
@@ -31,15 +31,17 @@ export function useCurrentUser(sessionId: string) {
             setCurrentUser({ id: user.id, name: data.anon_id });
           }
 
-          const { data: session } = await supabase
-            .from('chat_sessions')
-            .select('user_a, user_b, user_a_role, user_b_role')
-            .eq('id', sessionId)
-            .single();
+          if (sessionId) {
+            const { data: session } = await supabase
+              .from('chat_sessions')
+              .select('user_a, user_b, user_a_role, user_b_role')
+              .eq('id', sessionId)
+              .single();
 
-          if (session) {
-            const role = session.user_a === user.id ? session.user_a_role : session.user_b_role;
-            setCurrentUser(prev => prev ? { ...prev, role } : null);
+            if (session) {
+              const role = session.user_a === user.id ? session.user_a_role : session.user_b_role;
+              setCurrentUser(prev => prev ? { ...prev, role } : null);
+            }
           }
         }
       } catch (error) {

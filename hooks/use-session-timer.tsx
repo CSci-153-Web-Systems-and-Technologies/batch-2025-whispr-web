@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -14,22 +14,7 @@ export function useSessionTimer(sessionId: string) {
   const supabase = createClient()
   const router = useRouter()
 
-  const handleSessionEnd = async () => {
-    const response = await fetch('/api/chat/end', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ sessionId }),
-    })
-
-    if (!response.ok) {
-      toast.error('Failed to end session properly.');
-      return;
-    }
-
-    toast.success('Chat session has ended.');
-  }
+  const hasEndedRef = useRef(false);
 
   // Fetch expiration time
   useEffect(() => {
@@ -55,9 +40,26 @@ export function useSessionTimer(sessionId: string) {
     if (secondsLeft === null) return
 
     if (secondsLeft <= 0) {
-      handleSessionEnd();
-      router.push('/home')
-      return
+      if (!hasEndedRef.current) {
+        hasEndedRef.current = true;
+        
+        const endSession = async () => {
+            const res = await fetch('/api/chat/end', {
+                method: 'POST',
+                body: JSON.stringify({ sessionId }),
+            });
+
+            if (!res.ok) {
+                toast.error('Failed to end chat session. Please contact the developer to prevent future issues.');
+                return;
+            }
+
+            toast.success('Chat session has ended.');
+            router.push('/home');
+        };
+        endSession();
+      }
+      return;
     }
 
     const timer = setInterval(() => {

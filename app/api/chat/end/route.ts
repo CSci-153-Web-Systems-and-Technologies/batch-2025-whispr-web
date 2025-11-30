@@ -5,10 +5,17 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const { sessionId } = await req.json();
 
-  const { error} = await supabase
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { error } = await supabase
     .from("chat_sessions")
     .delete()
     .eq("id", sessionId)
+    .or(`user_a.eq.${user.id},user_b.eq.${user.id}`);
 
   if (error) {
     console.error("Error ending session:", error);
