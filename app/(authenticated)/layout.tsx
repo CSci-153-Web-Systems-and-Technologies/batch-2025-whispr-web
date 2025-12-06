@@ -1,5 +1,5 @@
 import { HeaderWrapper } from "@/components/HeaderWrapper";
-import { SessionTimerProvider } from "@/context/SessionTimerContext";
+import { SessionProvider } from "@/context/SessionContext";
 
 export default function AuthenticatedLayout({
   children,
@@ -7,11 +7,11 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }>) {
   return(
-    <SessionTimerProvider>
+    <SessionProvider>
       <main>
         <HeaderWrapper />
         {children}
       </main>
-    </SessionTimerProvider>
+    </SessionProvider>
   )
 }

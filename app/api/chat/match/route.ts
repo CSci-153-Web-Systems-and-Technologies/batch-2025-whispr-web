@@ -69,14 +69,14 @@ export async function POST(req: Request) {
       user_b: userB.user_id,
       user_a_role: userA.role,
       user_b_role: userB.role,
-      expires_at: new Date(Date.now() + 60 * 1000 * 2).toISOString(),
+      expires_at: new Date(Date.now() + 15 * 1000).toISOString(),
       is_active: true,
     })
     .select("id")
     .single();
 
   // 5. Clean up queue for both users (do this even if insert failed)
-  await supabase.from("waiting_queue").delete().in("user_id", [userA, userB]);
+  await supabase.from("waiting_queue").delete().in("user_id", [userA.user_id, userB.user_id]);
 
   // 6. If insert failed (likely duplicate), fetch the existing session
   if (sessionError) {
