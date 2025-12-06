@@ -9,13 +9,25 @@ import {
 } from '@/hooks/use-realtime-chat'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send } from 'lucide-react'
+import { Lock, LogOut, Send } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import ExtendDialog from './ExtendDialog'
+import { useRouter } from 'next/navigation'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import LeaveChatDialog from './LeaveChatDialog'
 
 interface RealtimeChatProps {
   roomName: string
   username: string
   senderId: string
+  partnerName: string
   onMessage?: (messages: ChatMessage[]) => void
   messages?: ChatMessage[]
 }
@@ -33,6 +45,7 @@ export const RealtimeChat = ({
   roomName,
   username,
   senderId,
+  partnerName,
   onMessage,
   messages: initialMessages = [],
 }: RealtimeChatProps) => {
@@ -47,7 +60,8 @@ export const RealtimeChat = ({
     senderId,
     username,
   })
-  const [newMessage, setNewMessage] = useState('')
+  const router = useRouter();
+  const [newMessage, setNewMessage] = useState('');
 
   // Merge realtime messages with initial messages
   const allMessages = useMemo(() => {
@@ -85,15 +99,24 @@ export const RealtimeChat = ({
   )
 
   return (
-    <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
+    <div className="flex flex-col h-full w-full bg-background text-foreground antialiased relative">
+      <div>
+        <ExtendDialog />
+      </div>
       {/* Messages */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+      <div ref={containerRef} className={`flex-1 overflow-y-auto p-4 space-y-4 relative`}>
+        <div className={`flex items-center justify-center text-muted-foreground rounded-md border border-dashed border-black py-3 px-4 w-max mx-auto`}>
+            <Lock className="inline size-4 mr-2" />
+            <span className='text-sm'>
+              Your identity is completely anonymous and this conversation will be deleted once the session ends.
+            </span>
+          </div>
         {allMessages.length === 0 ? (
-          <div className="text-center text-sm text-muted-foreground absolute bottom-10 left-0 right-0">
+          <div className="text-center text-sm text-muted-foreground mt-10">
             No messages yet. Start the conversation!
           </div>
         ) : null}
-        <div className="space-y-1">
+        <div className="space-y-1 px-5">
           {allMessages.map((message, index) => {
             const prevMessage = index > 0 ? allMessages[index - 1] : null
             const showHeader = !prevMessage || prevMessage.sender_id !== message.sender_id
@@ -104,6 +127,8 @@ export const RealtimeChat = ({
                 className="animate-in fade-in slide-in-from-bottom-4 duration-300"
               >
                 <ChatMessageItem
+                  username={username}
+                  partnerName={partnerName}
                   message={message}
                   isOwnMessage={message.sender_id === senderId}
                   showHeader={showHeader}
@@ -113,7 +138,11 @@ export const RealtimeChat = ({
           })}
         </div>
       </div>
-
+      {/* Quick Actions */}
+      <div className='flex items-center gap-3 bg-gray-100 border py-2 px-5'>
+          <span className='text-sm font-medium '>Quick Actions</span>
+          <LeaveChatDialog sessionId={roomName}/>
+      </div>
       <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
         <Input
           className={cn(
