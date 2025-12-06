@@ -1,8 +1,8 @@
 import { useContext } from 'react'
-import { SessionTimerContext } from '@/context/SessionTimerContext'
+import { SessionContext } from '@/context/SessionContext'
 
-export function useSessionTimer() {
-  const context = useContext(SessionTimerContext)
+export function useSession() {
+  const context = useContext(SessionContext)
   if (!context) {
     throw new Error('useSessionTimer must be used within a SessionTimerProvider')
   }

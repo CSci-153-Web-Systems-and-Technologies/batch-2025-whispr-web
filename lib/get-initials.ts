@@ -1,4 +1,4 @@
-export function getInitials(username: string): string {
+export function getInitials(username: string | null | undefined): string {
   if (!username) return "??";
 
   // Find all capital letters in the username
