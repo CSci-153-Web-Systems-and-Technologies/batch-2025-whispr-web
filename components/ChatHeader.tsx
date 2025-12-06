@@ -3,25 +3,22 @@
 import CustomAvatar from './CustomAvatar'
 import { useChatPartner } from '@/hooks/use-chat-partner'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { getInitials } from '@/lib/get-initials'
-import { createClient } from '@/utils/supabase/client'
-import { useRouter } from 'next/navigation'
 import { formatTime } from '@/lib/format-time'
 import { Clock, MessageSquareMore } from 'lucide-react'
-import { useSessionTimer } from '@/hooks/use-session-timer'
+import { useSession } from '@/hooks/use-session'
 
 const ChatHeader = ({ sessionId }: { sessionId: string }) => {
   const { currentUser } = useCurrentUser(sessionId)
   const { partner } = useChatPartner(sessionId, currentUser?.id || "")
-  const { secondsLeft, showWarning, isCritical } = useSessionTimer(sessionId)
+  const { secondsLeft, showWarning, isCritical } = useSession();
 
   if (!currentUser || !partner) return null;
 
   return (
-    <nav className='flex items-center justify-between py-4 px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
+    <nav className='flex items-center justify-between h-20 px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
       {/* Partner Info */}
       <div className='flex items-center gap-3'>
-        <CustomAvatar>{getInitials(partner.name)}</CustomAvatar>
+        <CustomAvatar name={partner.name} />
         <div className='flex flex-col gap-1'>
           <span className='font-medium text-base'>{partner.name}</span>
           <div className='flex items-center gap-2'>
