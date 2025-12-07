@@ -25,6 +25,7 @@ import { Heart, MoreVertical, Pencil, Trash } from 'lucide-react'
 import { getInitials } from '@/lib/get-initials'
 import CustomAvatar from './CustomAvatar'
 import { createClient } from '@/utils/supabase/client'
+import Link from 'next/link'
 
 interface PostCardProps {
   id: string;
@@ -55,6 +56,8 @@ const PostCard: React.FC<PostCardProps> = ({
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likes, setLikes] = useState<number>(likesCount ?? 0);
 
+  const profileURL = anonId ? `/profile/${anonId}`: '#';
+
   const getDate = () => {
     if (!createdAt) return '';
     const date = new Date(createdAt);
@@ -75,19 +78,16 @@ const PostCard: React.FC<PostCardProps> = ({
   }
 
   const handleLike = async () => {
-    // 1. OPTIMISTIC UPDATE (Update UI immediately)
     const newIsLiked = !isLiked;
     const newLikesCount = newIsLiked ? likes + 1 : likes - 1;
 
     setIsLiked(newIsLiked);
     setLikes(newLikesCount);
 
-    // 2. CALL SERVER
     const { error } = await supabase.rpc('toggle_like', { 
       target_post_id: id 
     });
 
-    // 3. ROLLBACK IF ERROR
     if (error) {
       console.error(error);
       toast.error("Failed to update like");
@@ -100,9 +100,13 @@ const PostCard: React.FC<PostCardProps> = ({
     <Card onDoubleClick={handleLike}>
       <CardHeader className='flex justify-between items-center'>
         <div className='flex items-center gap-3'>
-          <CustomAvatar name={anonId}/>
+          <Link href={profileURL}>
+            <CustomAvatar name={anonId}/>
+          </Link>
           <div className='flex flex-col gap-1'>
-            <CardTitle className='font-semibold'>{anonId}</CardTitle>
+            <Link href={profileURL}>
+              <CardTitle className='text-sm'>{anonId || 'Anonymous'}</CardTitle>
+            </Link>
             <CardDescription className='text-xs text-muted-foreground'>
               {`
                 ${getDate()} • 

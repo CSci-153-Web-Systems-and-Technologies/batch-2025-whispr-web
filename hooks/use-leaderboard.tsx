@@ -19,15 +19,15 @@ export function useLeaderboard() {
       // 1. Fetch Top Listeners
       const listenersQuery = supabase
         .from('anon_users')
-        .select('anon_id, listening_pts')
-        .gt('listening_pts', 0) // Optional: Hide users with 0 points
+        .select('id, anon_id, listening_pts')
+        .gt('listening_pts', 0)
         .order('listening_pts', { ascending: false })
         .limit(3)
 
       // 2. Fetch Top Venters
       const ventersQuery = supabase
         .from('anon_users')
-        .select('anon_id, venting_pts')
+        .select('id, anon_id, venting_pts')
         .gt('venting_pts', 0)
         .order('venting_pts', { ascending: false })
         .limit(3)
