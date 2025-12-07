@@ -13,15 +13,8 @@ import { Lock, LogOut, Send } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ExtendDialog from './ExtendDialog'
 import { useRouter } from 'next/navigation'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import LeaveChatDialog from './LeaveChatDialog'
+import { useSession } from '@/hooks/use-session'
 
 interface RealtimeChatProps {
   roomName: string
@@ -60,7 +53,6 @@ export const RealtimeChat = ({
     senderId,
     username,
   })
-  const router = useRouter();
   const [newMessage, setNewMessage] = useState('');
 
   // Merge realtime messages with initial messages
@@ -141,7 +133,7 @@ export const RealtimeChat = ({
       {/* Quick Actions */}
       <div className='flex items-center gap-3 bg-gray-100 border py-2 px-5'>
           <span className='text-sm font-medium '>Quick Actions</span>
-          <LeaveChatDialog sessionId={roomName}/>
+          <LeaveChatDialog/>
       </div>
       <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
         <Input

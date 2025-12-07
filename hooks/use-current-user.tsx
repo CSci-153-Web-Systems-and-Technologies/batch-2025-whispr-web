@@ -3,55 +3,67 @@
 import React, {useEffect, useState} from "react"
 import { createClient } from '@/utils/supabase/client';
 import { toast } from "sonner";
-import type { UserRole } from "@/app/(authenticated)/home/_components/InteractionCard";
+import type { User } from "@/types";
+import { useParams } from "next/navigation";
 
 
-export type User = {
-  id: string;
-  name: string; // anon_id
-  role?: UserRole;
-}
 
-export function useCurrentUser(sessionId?: string) {
+
+export function useCurrentUser(){
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const supabase = createClient();
+  const params = useParams();
+  const sessionId = params.sessionId as string | undefined;
 
   useEffect(() => {
-    const getCurrentUser = async () => {
+    const fetchFullUserData = async () => {
+      if (!sessionId) return;
+
       try {
+        // 1. Get the Auth User
         const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data } = await supabase
-            .from('anon_users')
-            .select('anon_id')
-            .eq('id', user.id)
-            .single();
+        if (!user) return;
 
-          if (data) {
-            setCurrentUser({ id: user.id, name: data.anon_id });
-          }
+        // 2. Get the Anon Profile
+        const { data: anonData } = await supabase
+          .from('anon_users')
+          .select('anon_id')
+          .eq('id', user.id)
+          .single();
 
-          if (sessionId) {
-            const { data: session } = await supabase
-              .from('chat_sessions')
-              .select('user_a, user_b, user_a_role, user_b_role')
-              .eq('id', sessionId)
-              .single();
+        if (!anonData) return;
 
-            if (session) {
-              const role = session.user_a === user.id ? session.user_a_role : session.user_b_role;
-              setCurrentUser(prev => prev ? { ...prev, role } : null);
-            }
+        let userData: User = { 
+            id: user.id, 
+            name: anonData.anon_id ,
+            role: null
+        };
+
+        const { data: sessionData } = await supabase
+          .from('chat_sessions')
+          .select('user_a, user_b, user_a_role, user_b_role')
+          .eq('id', sessionId)
+          .single();
+
+        if (sessionData) {
+          if (sessionData.user_a === user.id) {
+            userData.role = sessionData.user_a_role;
+          } else if (sessionData.user_b === user.id) {
+            userData.role = sessionData.user_b_role;
           }
         }
+
+        // 4. Update State ONCE
+        setCurrentUser(userData);
+
       } catch (error) {
-        toast.error("Failed to fetch current user.");
+        console.error(error);
+        toast.error("Failed to fetch user data.");
       }
-    }
+    };
 
-    getCurrentUser();
-  }, [supabase])
-
+    fetchFullUserData();
+  }, [sessionId, supabase]);
 
   return { currentUser };
 }

@@ -8,8 +8,9 @@ import { useCurrentUser } from '@/hooks/use-current-user';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useChatPartner } from '@/hooks/use-chat-partner';
-import { get } from 'http';
 import { UseMessageQuery } from '@/hooks/use-message-query';
+import FeedbackDialog from './_components/FeedbackDialog';
+import { useSession } from '@/hooks/use-session';
 
 interface ChatPageProps {
   params: Promise<{
@@ -21,6 +22,7 @@ export default function ChatPage({params}: ChatPageProps) {
   const supabase = createClient();
   const router = useRouter();
   const [sessionId, setSessionId] = useState<string>('');
+  const {showFeedbackDialog} = useSession()
 
   const { currentUser } = useCurrentUser();
   const { partner } = useChatPartner(sessionId, currentUser?.id || "");
@@ -135,11 +137,18 @@ export default function ChatPage({params}: ChatPageProps) {
     if (error) console.error('Error storing messages:', error);
   }
 
-  if (!currentUser || !partner) return null;
+  if (!currentUser || !partner ) return null;
 
   return (
     <div className='flex flex-1 h-screen border pt-20'>
-
+      {showFeedbackDialog && 
+        <FeedbackDialog 
+          sessionId={sessionId}
+          userRole={currentUser.role} 
+          partner={partner}
+        />
+      }
+    
       <RealtimeChat 
         roomName={sessionId} 
         senderId={currentUser.id} 

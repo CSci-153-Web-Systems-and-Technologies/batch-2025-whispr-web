@@ -8,7 +8,7 @@ import { Clock, MessageSquareMore } from 'lucide-react'
 import { useSession } from '@/hooks/use-session'
 
 const ChatHeader = ({ sessionId }: { sessionId: string }) => {
-  const { currentUser } = useCurrentUser(sessionId)
+  const { currentUser } = useCurrentUser()
   const { partner } = useChatPartner(sessionId, currentUser?.id || "")
   const { secondsLeft, showWarning, isCritical } = useSession();
 

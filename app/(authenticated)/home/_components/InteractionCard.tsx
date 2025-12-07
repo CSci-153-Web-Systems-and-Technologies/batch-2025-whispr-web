@@ -13,8 +13,8 @@ import { Button } from '@/components/ui/button'
 import { Heart, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import type { UserRole } from '@/types'
 
-export type UserRole = 'venter' | 'listener'
 
 const MAX_ATTEMPTS = 10
 const POLL_INTERVAL = 1500
