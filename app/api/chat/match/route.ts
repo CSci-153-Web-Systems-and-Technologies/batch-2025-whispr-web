@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       user_b: userB.user_id,
       user_a_role: userA.role,
       user_b_role: userB.role,
-      expires_at: new Date(Date.now() + 15 * 1000).toISOString(),
+      expires_at: new Date(Date.now() + 60 * 1000 * 10).toISOString(),
       is_active: true,
     })
     .select("id")

@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useChatPartner } from '@/hooks/use-chat-partner';
 import { get } from 'http';
+import { UseMessageQuery } from '@/hooks/use-message-query';
 
 interface ChatPageProps {
   params: Promise<{
@@ -23,7 +24,7 @@ export default function ChatPage({params}: ChatPageProps) {
 
   const { currentUser } = useCurrentUser();
   const { partner } = useChatPartner(sessionId, currentUser?.id || "");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { messages } = UseMessageQuery(sessionId);
   
 
   useEffect(() => {
@@ -53,26 +54,86 @@ export default function ChatPage({params}: ChatPageProps) {
   }, [sessionId, router, supabase]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const { data } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .eq('session_id', sessionId)
-        .order('created_at', { ascending: true });
+    if (!sessionId) return;
+    sessionStorage.setItem('active_session', sessionId);
 
-        if (data) setMessages(data);
-    }
+    const handleVisibilityChange = () => {
+      // When tab becomes hidden and user is navigating away
+      if (document.visibilityState === 'hidden') {
+        const activeSession = sessionStorage.getItem('active_session');
+        
+        // Check if we're still on the chat page
+        const isStillOnCurrentSession = window.location.pathname === `/chat/${sessionId}`;
+        
+        if (activeSession && !isStillOnCurrentSession) {
+          // User navigated away - terminate session
+          navigator.sendBeacon(
+            '/api/chat/end',
+            new Blob([JSON.stringify({ sessionId: activeSession })], {
+              type: 'application/json'
+            })
+          );
+          sessionStorage.removeItem('active_session');
+        }
+      }
+    };
 
-    fetchMessages();
+    // Handle browser back/forward navigation
+    const handlePopState = async () => {
+      const activeSession = sessionStorage.getItem('active_session');
+      if (activeSession) {
+        await fetch('/api/chat/end', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: activeSession }),
+          keepalive: true
+        });
+        sessionStorage.removeItem('active_session');
+      }
+    };
 
-    // const getPartner = async () => {
-    //   if(!sessionId) return;
-    //   const {partner} = useChatPartner(sessionId, currentUser?.id || "");
-    //   if(partner) partnerName = partner.name;
-    // }
-    // getPartner(); 
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('popstate', handlePopState);
 
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, [sessionId]);
+
+  // Clean up on component unmount (navigation away)
+  useEffect(() => {
+    return () => {
+      const activeSession = sessionStorage.getItem('active_session');
+      if (activeSession === sessionId) {
+        // Navigating away from chat page
+        fetch('/api/chat/end', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+          keepalive: true
+        });
+        sessionStorage.removeItem('active_session');
+      }
+    };
+  }, [sessionId]);
+
+  const handleMessage = async (messages: ChatMessage[]) => {
+    const { error } = await supabase
+      .from('chat_messages')
+      .upsert(
+        messages.map(msg => ({
+          id: msg.id,
+          session_id: sessionId,
+          sender_id: msg.sender_id,
+          content: msg.content,
+          timestamp: msg.timestamp,
+        })),
+        { onConflict: 'id' }
+      );
+
+    if (error) console.error('Error storing messages:', error);
+  }
 
   if (!currentUser || !partner) return null;
 
@@ -84,6 +145,8 @@ export default function ChatPage({params}: ChatPageProps) {
         senderId={currentUser.id} 
         username={currentUser.name}
         partnerName={partner.name}
+        messages={messages}
+        onMessage={handleMessage}
       />
     </div>
   )
