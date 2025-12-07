@@ -18,50 +18,97 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { toast } from 'sonner'
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button'
 import { Heart, MoreVertical, Pencil, Trash } from 'lucide-react'
+import { getInitials } from '@/lib/get-initials'
+import CustomAvatar from './CustomAvatar'
+import { createClient } from '@/utils/supabase/client'
 
 interface PostCardProps {
+  id: string;
   anonId?: string;
   content?: string;
   createdAt?: string;
-  likesCount?: number;
+  likesCount: number;
   distance?: number;
   canManagePost?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  initialIsLiked?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
+  id,
   anonId,
   content,
   createdAt,
+  initialIsLiked = false,
   likesCount,
   distance,
   canManagePost,
   onEdit,
   onDelete,
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(likesCount || 0);
+  const supabase = createClient();
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [likes, setLikes] = useState<number>(likesCount ?? 0);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikes(isLiked ? likes - 1 : likes + 1);
+  const getDate = () => {
+    if (!createdAt) return '';
+    const date = new Date(createdAt);
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+
+  const getTime = () => {
+    if (!createdAt) return '';
+    const date = new Date(createdAt);
+    return date.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+    }); 
+  }
+
+  const handleLike = async () => {
+    // 1. OPTIMISTIC UPDATE (Update UI immediately)
+    const newIsLiked = !isLiked;
+    const newLikesCount = newIsLiked ? likes + 1 : likes - 1;
+
+    setIsLiked(newIsLiked);
+    setLikes(newLikesCount);
+
+    // 2. CALL SERVER
+    const { error } = await supabase.rpc('toggle_like', { 
+      target_post_id: id 
+    });
+
+    // 3. ROLLBACK IF ERROR
+    if (error) {
+      console.error(error);
+      toast.error("Failed to update like");
+      setIsLiked(!newIsLiked);
+      setLikes(likes); 
+    }
   }
 
   return (
     <Card onDoubleClick={handleLike}>
       <CardHeader className='flex justify-between items-center'>
-        <div className='flex items-center'>
-          <Avatar className='w-10 h-10 mr-4'>
-            <AvatarFallback className='bg-secondary font-medium'>LI</AvatarFallback>
-          </Avatar>
+        <div className='flex items-center gap-3'>
+          <CustomAvatar name={anonId}/>
           <div className='flex flex-col gap-1'>
-            <CardTitle className='font-semibold'>AnonymousUser</CardTitle>
+            <CardTitle className='font-semibold'>{anonId}</CardTitle>
             <CardDescription className='text-xs text-muted-foreground'>
-              Nov 11, 2025 • 2:30 PM • 1.0km away
+              {`
+                ${getDate()} • 
+                ${getTime()} • 
+                1.0km away
+              `}
             </CardDescription>
           </div>
         </div>
@@ -89,9 +136,7 @@ const PostCard: React.FC<PostCardProps> = ({
           )}
         </div>
       </CardHeader>
-      <CardContent>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus nulla gravida orci.
-      </CardContent>
+      <CardContent>{content}</CardContent>
       <CardFooter>
         <CardAction className='flex items-center'>
           <Button variant="ghost" onClick={handleLike} className='hover:bg-transparent hover:text-destructive hover:scale-105'>
