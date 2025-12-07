@@ -1,4 +1,5 @@
-import Navbar from "@/components/Navbar";
+import { HeaderWrapper } from "@/components/HeaderWrapper";
+import { SessionProvider } from "@/context/SessionContext";
 
 export default function AuthenticatedLayout({
   children,
@@ -6,9 +7,11 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }>) {
   return(
-    <main>
-      <Navbar />
-      {children}
-    </main>
+    <SessionProvider>
+      <main>
+        <HeaderWrapper />
+        {children}
+      </main>
+    </SessionProvider>
   )
 }

@@ -28,7 +28,7 @@ const MoodHistory = () => {
       <CardContent>
           <h1 className='font-semibold text-center text-base mb-3 bg-primary text-white py-1 rounded-md'>{`${month} ${year}`}</h1>
           <ScrollArea className='rounded-md border p-2'>
-            <div className='flex flex-col gap-2  h-80'>
+            <div className='flex flex-col gap-2  h-max max-h-96'>
               {
                 Array.from({ length: day }, (_, i) => i + 1).map((dayNum) => (
                   <div key={dayNum} className='flex items-center justify-around gap-5 py-3 bg-secondary/50 rounded-sm'>
