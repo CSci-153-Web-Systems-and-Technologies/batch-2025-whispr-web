@@ -1,7 +1,9 @@
 export type User = {
   id: string;
-  name: string; // anon_id
-  role: UserRole | null;
+  name: string; 
+  role?: UserRole | null;
+  listeningPts: number;
+  ventingPts: number;
 };
 
 export type UserRole = 'venter' | 'listener';
@@ -15,4 +17,10 @@ export type Post = {
   isLikedByMe: boolean;
   created_at: string;
   distance?: number;
+}
+
+export type LeaderboardUser = {
+  id: string;
+  anonId: string;
+  points: number;
 }
