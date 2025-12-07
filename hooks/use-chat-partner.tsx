@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import type { User } from './use-current-user'
+import type { User } from '@/types'
 
 export function useChatPartner(sessionId: string, currentUserId: string) {
-  const [partner, setPartner] = useState<User>({ id: '', name: '' })
+  const [partner, setPartner] = useState<User | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function useChatPartner(sessionId: string, currentUserId: string) {
           return
         }
 
-        // Find the partner (the one who is NOT the current user)
+        // Find the partner
         const partnerId = participants.user_a === currentUserId 
           ? participants.user_b 
           : participants.user_a;
@@ -36,8 +36,24 @@ export function useChatPartner(sessionId: string, currentUserId: string) {
           .eq('id', partnerId)
           .single()
 
+        const { data: session } = await supabase
+          .from('chat_sessions')
+          .select('user_a, user_b, user_a_role, user_b_role')
+          .eq('id', sessionId)
+          .single()
+
+        if (!session) return;
+
+        const partnerRole = session.user_a === partnerId
+          ? session.user_a_role
+          : session?.user_b_role
+
         if (user) {
-          setPartner({ id: partnerId, name: user.anon_id })
+          setPartner({ 
+            id: partnerId, 
+            name: user.anon_id,
+            role: partnerRole
+          })
         }
       } catch (error) {
         console.error('Error fetching chat partner:', error)

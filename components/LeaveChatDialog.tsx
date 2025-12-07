@@ -9,24 +9,15 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from './ui/button';
 import { LogOut } from 'lucide-react';
-import { useRouter } from 'next/navigation'
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useSession } from "@/hooks/use-session";
 
-const LeaveChatDialog = ({sessionId}: {sessionId: string}) => {
-  const router = useRouter();
+const LeaveChatDialog = () => {
+  const {setIsFeedbackOpen, endSession} = useSession();
 
   const handleLeaveChat = async () => {
-    try {
-      const res = await fetch('/api/chat/end', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: sessionId }),
-      })
-      if (!res.ok) throw new Error('Failed to end session')
-      router.replace('/home')
-    } catch (error) {
-      console.error(error)
-    }
+    await endSession();
+    setIsFeedbackOpen(true);
   }
 
 
@@ -49,7 +40,9 @@ const LeaveChatDialog = ({sessionId}: {sessionId: string}) => {
           <DialogClose asChild>
             <Button variant='secondary'>Cancel</Button>
           </DialogClose>
-          <Button variant='destructive' onClick={handleLeaveChat} className="text-black">Leave Chat</Button>
+          <DialogClose asChild>
+            <Button variant='destructive' onClick={handleLeaveChat} className="text-black">Leave Chat</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

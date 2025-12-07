@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useEffect, useState, useRef, ReactNode } from 'react'
+import React, { createContext, useEffect, useState, useRef, ReactNode, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -13,11 +13,14 @@ export interface SessionContextType {
   secondsLeft: number | null
   showWarning: boolean
   showExtendDialog: boolean 
+  showFeedbackDialog: boolean // logic updated
   isCritical: boolean
   isWaitingForOther: boolean
   dismissWarning: () => void
   resetWarning: () => void
   setIsWaitingForOther: (value: boolean) => void
+  setIsFeedbackOpen: React.Dispatch<React.SetStateAction<boolean>>
+  endSession: () => Promise<void> // Exposed for your "Leave Chat" button
 }
 
 export const SessionContext = createContext<SessionContextType | null>(null)
@@ -32,9 +35,47 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [expiryTimestamp, setExpiryTimestamp] = useState<number | null>(null)
   const [isDismissed, setIsDismissed] = useState(false)
   const [isWaitingForOther, setIsWaitingForOther] = useState(false)
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false) // New State
 
   const hasEndedRef = useRef(false)
   const currentSessionIdRef = useRef<string>('')
+
+  const endSession = useCallback(async () => {
+    if (!sessionId) return
+    
+    setSecondsLeft(0)
+    hasEndedRef.current = true
+
+    setIsFeedbackOpen(true) 
+    localStorage.removeItem(`session_warning_dismissed_${sessionId}`)
+
+    try {
+      await fetch('/api/chat/end', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+    } catch (error) {
+      console.error('Error ending session:', error)
+    }
+  }, [sessionId])
+
+  // Intercept Browser Back Button
+  useEffect(() => {
+    if (!sessionId || isFeedbackOpen) return
+
+    window.history.pushState(null, '', window.location.href)
+
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault() 
+      window.history.pushState(null, '', window.location.href)
+
+      endSession()
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [sessionId, isFeedbackOpen, endSession])
 
   // Reset all state when session changes
   useEffect(() => {
@@ -42,6 +83,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setExpiryTimestamp(null)
     setSecondsLeft(null)
     setIsWaitingForOther(false)
+    setIsFeedbackOpen(false)
     
     if (!sessionId) {
       currentSessionIdRef.current = ''
@@ -107,7 +149,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
       // Handle extension decline - check if OTHER user declined
       if (newData.extension_declined && !otherUserWants) {
-        // Other user declined while we wanted to extend (or are waiting)
         if (currentUserWants || isWaitingForOther) {
           toast.error('Your partner declined the extension')
           setIsWaitingForOther(false)
@@ -136,9 +177,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const handleDelete = () => {
       if (!isSubscribed || currentSessionIdRef.current !== sessionId) return
       
+      // If partner deleted/ended session, show feedback instead of immediate redirect
       toast.info('Session ended')
+      setIsFeedbackOpen(true)
       localStorage.removeItem(`session_warning_dismissed_${sessionId}`)
-      router.replace('/home')
     }
 
     const channel = supabase
@@ -177,26 +219,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setSecondsLeft(diff)
 
       if (diff <= 0 && !hasEndedRef.current && currentSessionIdRef.current === effectSessionId) {
-        hasEndedRef.current = true
-
-        const endSession = async () => {
-          if (currentSessionIdRef.current !== effectSessionId) return
-
-          setSecondsLeft(0)
-          try {
-            const res = await fetch('/api/chat/end', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ sessionId: effectSessionId }),
-            })
-            if (!res.ok) throw new Error('Failed to end session')
-            
-            localStorage.removeItem(`session_warning_dismissed_${effectSessionId}`)
-            router.replace('/home')
-          } catch (error) {
-            console.error(error)
-          }
-        }
         endSession()
       }
     }
@@ -204,7 +226,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     tick()
     const timer = setInterval(tick, 1000)
     return () => clearInterval(timer)
-  }, [expiryTimestamp, sessionId, router])
+  }, [expiryTimestamp, sessionId, endSession])
 
   const dismissWarning = () => {
     setIsDismissed(true)
@@ -220,17 +242,22 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const showWarning = secondsLeft !== null && secondsLeft <= WARNING_THRESHOLD
   const showExtendDialog = showWarning && !isDismissed
+  
+  const showFeedbackDialog = (secondsLeft !== null && secondsLeft === 0) || isFeedbackOpen
 
   const value = {
     sessionId,
     secondsLeft,
     showWarning,
     showExtendDialog,
+    showFeedbackDialog,
     isCritical: secondsLeft !== null && secondsLeft <= CRITICAL_THRESHOLD,
     isWaitingForOther,
     dismissWarning,
     resetWarning,
-    setIsWaitingForOther
+    setIsWaitingForOther,
+    setIsFeedbackOpen,
+    endSession
   }
 
   return (
