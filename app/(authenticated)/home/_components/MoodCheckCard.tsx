@@ -46,7 +46,7 @@ const MoodCheckCard = () => {
 
   useEffect(() => {
     fetchMoodData();
-  }, [streakCount]);
+  }, []);
   
   const handleCheckIn = async (mood: string) => {
     setSelectedMood(mood);

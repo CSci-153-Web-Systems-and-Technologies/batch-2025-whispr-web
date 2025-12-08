@@ -6,7 +6,7 @@ export type User = {
   ventingPts: number;
 };
 
-export type UserRole = 'venter' | 'listener';
+export type UserRole = 'venter' | 'listener'| null;
 
 export type Post = {
   id: string;
