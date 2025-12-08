@@ -121,6 +121,19 @@ export default function ChatPage({params}: ChatPageProps) {
   }, [sessionId]);
 
   const handleMessage = async (messages: ChatMessage[]) => {
+    if (!sessionId) return;
+
+    const { data: sessionExists } = await supabase
+      .from('chat_sessions')
+      .select('id')
+      .eq('id', sessionId)
+      .maybeSingle();
+      
+    if (!sessionExists) {
+      console.log('Session ended, skipping message storage');
+      return;
+    }
+
     const { error } = await supabase
       .from('chat_messages')
       .upsert(
@@ -134,10 +147,10 @@ export default function ChatPage({params}: ChatPageProps) {
         { onConflict: 'id' }
       );
 
-    if (error) console.error('Error storing messages:', error);
+    if (error) console.log('Error storing messages:', error);
   }
 
-  if (!currentUser || !partner ) return null;
+  if (!currentUser || !partner || !currentUser.role) return null;
 
   return (
     <div className='flex flex-1 h-screen border pt-20'>
