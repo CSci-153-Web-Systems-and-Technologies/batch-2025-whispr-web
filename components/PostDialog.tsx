@@ -10,6 +10,7 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
+import { getCurrentLocation } from "@/lib/geolocation"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useState } from "react"
@@ -74,12 +75,15 @@ const PostDialog = ({children, dialogType, postId, initialContent, onSuccess, op
     setIsLoading(true);
     try {
         let res;
+        let location;
         if (dialogType === 'add') {
-            res = await fetch('/api/post/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content }),
-            });
+          const loc = await getCurrentLocation();
+          location = { latitude: loc.lat, longitude: loc.lng };
+          res = await fetch('/api/post/add', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ content, location }),
+          });
         } else if (dialogType === 'edit') {
             if (content === oldContent) {
                 toast.error('No changes made to the post.');

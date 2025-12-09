@@ -30,7 +30,7 @@ interface PostCardProps {
   content?: string;
   createdAt?: string;
   likesCount: number;
-  distance?: number;
+  distance: number;
   canManagePost?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -109,7 +109,7 @@ const PostCard: React.FC<PostCardProps> = ({
               {`
                 ${getDate()} • 
                 ${getTime()} • 
-                1.0km away
+                ${distance.toFixed(1)}m away
               `}
             </CardDescription>
           </div>
