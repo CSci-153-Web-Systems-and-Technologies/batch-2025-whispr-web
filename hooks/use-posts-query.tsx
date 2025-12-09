@@ -1,8 +1,8 @@
 "use client"
 
-import { createClient } from "@/utils/supabase/client"
-import { useEffect, useState, useCallback } from "react"
-import { Post } from "@/types"
+import { Post } from "@/types";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
 
 export function usePostsQuery() {
   const supabase = createClient();
@@ -46,6 +46,7 @@ export function usePostsQuery() {
       likesCount: post.like_count || 0,
       isLikedByMe: myLikedPostIds.has(post.id),
       created_at: post.created_at,
+      canManagePost: user ? post.author_id === user.id : false,
     }));
 
     setPosts(formattedPosts);

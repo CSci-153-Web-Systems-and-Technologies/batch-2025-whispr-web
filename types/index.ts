@@ -17,6 +17,7 @@ export type Post = {
   isLikedByMe: boolean;
   created_at: string;
   distance?: number;
+  canManagePost?: boolean;
 }
 
 export type LeaderboardUser = {

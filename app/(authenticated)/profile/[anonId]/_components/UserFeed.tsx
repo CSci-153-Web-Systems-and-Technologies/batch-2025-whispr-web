@@ -11,15 +11,14 @@ import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
 interface UserFeedProps {
-  targetUserId?: string; 
-  anonId?: string;
+  targetUserId: string; 
 }
 
-const UserFeed = ({targetUserId, anonId}: UserFeedProps) => {
+const UserFeed = ({targetUserId}: UserFeedProps) => {
   const supabase = createClient()
 
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const { posts } = usePostsQuery();
+  const { posts, refetch } = usePostsQuery();
 
   useEffect(() => {
     const fetchCurrentUserId = async () => {
@@ -46,12 +45,13 @@ const UserFeed = ({targetUserId, anonId}: UserFeedProps) => {
                 <PostCard 
                   key={post.id}
                   id={post.id} 
-                  anonId={anonId} 
+                  anonId={post.author_name} 
                   content={post.content} 
                   createdAt={post.created_at} 
                   likesCount={post.likesCount || 0}
                   initialIsLiked={post.isLikedByMe || false}
-                  canManagePost={targetUserId === currentUserId}
+                  canManagePost={post.canManagePost}
+                  onPostChange={refetch}
                 />
               )
             })

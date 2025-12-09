@@ -22,6 +22,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
 import CustomAvatar from './CustomAvatar'
+import PostDialog from './PostDialog'
 
 interface PostCardProps {
   id: string;
@@ -34,6 +35,7 @@ interface PostCardProps {
   onEdit?: () => void;
   onDelete?: () => void;
   initialIsLiked?: boolean;
+  onPostChange?: () => void;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -45,10 +47,12 @@ const PostCard: React.FC<PostCardProps> = ({
   likesCount,
   distance,
   canManagePost,
+  onPostChange,
 }) => {
   const supabase = createClient();
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likes, setLikes] = useState<number>(likesCount ?? 0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const profileURL = anonId ? `/profile/${anonId}`: '#';
 
@@ -90,14 +94,6 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   }
 
-  const handleEdit = () => {
-
-  }
-
-  const handleDelete = () => {
-
-  }
-
   return (
     <Card onDoubleClick={handleLike}>
       <CardHeader className='flex justify-between items-center'>
@@ -120,29 +116,46 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
         <div className="flex items-center gap-2">
           {canManagePost && (
-            <DropdownMenu>
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleEdit} className='cursor-pointer' asChild>
-                  <Button variant="ghost" className=" flex justify-start w-full group hover:bg-primary! hover:text-white!">
-                    <Pencil className="mr-2 h-4 w-4 group-hover:fill-white group-hover:text-white text-"/> Edit
-                  </Button>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDelete} className='cursor-pointer text-destructive' asChild>
-                  <Button variant="ghost" className="flex justify-start w-full group hover:bg-destructive! hover:text-black! hover:ring-destructive/50!">
-                    <Trash className="mr-2 h-4 w-4 group-hover:fill-black group-hover:text-black text-"/> Delete
-                  </Button>
-                </DropdownMenuItem>
+                {/* EDIT BUTTON */}
+                <PostDialog dialogType='edit' postId={id} initialContent={content} onSuccess={onPostChange} onOpenChange={(open) => !open && setDropdownOpen(false)}>
+                  <DropdownMenuItem 
+                    className='cursor-pointer' 
+                    onSelect={(e) => e.preventDefault()} 
+                    asChild
+                  >
+                    <Button variant="ghost" className="flex justify-start w-full group hover:bg-primary! hover:text-white!">
+                      <Pencil className="mr-2 h-4 w-4 group-hover:fill-white group-hover:text-white"/> 
+                      Edit
+                    </Button>
+                  </DropdownMenuItem>
+                </PostDialog>
+
+                {/* DELETE BUTTON */}
+                <PostDialog dialogType='delete' postId={id} onSuccess={onPostChange} onOpenChange={(open) => !open && setDropdownOpen(false)}>
+                  <DropdownMenuItem 
+                    className='cursor-pointer text-destructive' 
+                    onSelect={(e) => e.preventDefault()} 
+                    asChild
+                  >
+                    <Button variant="ghost" className="flex justify-start w-full group hover:bg-destructive! hover:text-black! hover:ring-destructive/50!">
+                      <Trash className="mr-2 h-4 w-4 group-hover:fill-black group-hover:text-black"/> 
+                      Delete
+                    </Button>
+                  </DropdownMenuItem>
+                </PostDialog>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
         </div>
       </CardHeader>
-      <CardContent>{content}</CardContent>
+      <CardContent className='whitespace-pre-wrap wrap-break-word'>{content}</CardContent>
       <CardFooter>
         <CardAction className='flex items-center'>
           <Button variant="ghost" onClick={handleLike} className='hover:bg-transparent hover:text-destructive hover:scale-105'>

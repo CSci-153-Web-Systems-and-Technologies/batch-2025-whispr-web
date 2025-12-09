@@ -14,7 +14,7 @@ import { MessageCircleDashed } from 'lucide-react'
 import PostInput from './PostInput'
 
 const CommunityWall = () => {
-  const { posts } = usePostsQuery();
+  const { posts, refetch } = usePostsQuery();
 
 
   return (
@@ -27,7 +27,7 @@ const CommunityWall = () => {
         </span>
       </div>
       <div className='flex flex-col gap-4 p-4'>
-        <PostInput />
+        <PostInput onPostChange={refetch} />
         {
           posts.length === 0 ? (
             <Empty>
@@ -51,6 +51,8 @@ const CommunityWall = () => {
                 anonId={post.author_name} 
                 content={post.content} 
                 createdAt={post.created_at}
+                onPostChange={refetch}
+                canManagePost={post.canManagePost}
               />
             ))
           )

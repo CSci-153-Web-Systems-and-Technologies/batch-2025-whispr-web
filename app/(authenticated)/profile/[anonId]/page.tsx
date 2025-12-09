@@ -39,7 +39,7 @@ const page = () => {
       </div>
       <div className='flex gap-5'>
         <MoodHistory targetUserId={userId}/>
-        <UserFeed anonId={anonId} targetUserId={userId}/>
+        <UserFeed targetUserId={userId}/>
       </div>
     </div>
   )
