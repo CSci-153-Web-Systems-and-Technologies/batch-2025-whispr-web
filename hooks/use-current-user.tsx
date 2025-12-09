@@ -1,13 +1,10 @@
 'use client'
 
-import React, {useEffect, useState} from "react"
-import { createClient } from '@/utils/supabase/client';
-import { toast } from "sonner";
 import type { User } from "@/types";
+import { createClient } from '@/utils/supabase/client';
 import { useParams } from "next/navigation";
-
-
-
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function useCurrentUser(){
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -17,8 +14,6 @@ export function useCurrentUser(){
 
   useEffect(() => {
     const fetchFullUserData = async () => {
-      if (!sessionId) return;
-
       try {
         // 1. Get the Auth User
         const { data: { user } } = await supabase.auth.getUser();
@@ -27,7 +22,7 @@ export function useCurrentUser(){
         // 2. Get the Anon Profile
         const { data: anonData } = await supabase
           .from('anon_users')
-          .select('anon_id')
+          .select('anon_id, listening_pts, venting_pts')
           .eq('id', user.id)
           .single();
 
@@ -36,8 +31,15 @@ export function useCurrentUser(){
         let userData: User = { 
             id: user.id, 
             name: anonData.anon_id ,
-            role: null
+            role: null,
+            listeningPts: anonData.listening_pts,
+            ventingPts: anonData.venting_pts
         };
+
+        if(!sessionId){
+          setCurrentUser(userData);
+          return;
+        }
 
         const { data: sessionData } = await supabase
           .from('chat_sessions')
@@ -53,7 +55,6 @@ export function useCurrentUser(){
           }
         }
 
-        // 4. Update State ONCE
         setCurrentUser(userData);
 
       } catch (error) {

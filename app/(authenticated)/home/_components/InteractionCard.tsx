@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardAction,
@@ -9,11 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Button } from '@/components/ui/button'
+import type { UserRole } from '@/types'
 import { Heart, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import type { UserRole } from '@/types'
 
 
 const MAX_ATTEMPTS = 10

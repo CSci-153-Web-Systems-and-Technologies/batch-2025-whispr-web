@@ -1,26 +1,38 @@
 "use client"
 
-import React, { useEffect, useState }from 'react'
-import { Button } from './ui/button'
-import { usePathname } from 'next/navigation';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { House, User } from 'lucide-react';
 import Link from 'next/link';
-
+import { useParams, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
 
 const Navbar = () => {
   const [isInHome, setIsInHome] = useState(false);
   const [isInProfile, setIsInProfile] = useState(false);
   const pathname = usePathname();
+  const params = useParams();
+
+  // Profile Owner
+  const anonId = Array.isArray(params.anonId) ? params.anonId[0] : params.anonId; 
+
+  // Profile Visitor (Currently logged in user)
+  const { currentUser } = useCurrentUser();
 
   useEffect(() => {
+    if(!currentUser) return;
+    
     if(pathname.startsWith('/home')) {
       setIsInHome(true);
       setIsInProfile(false);
+    } else if(pathname.startsWith(`/profile`) && currentUser && anonId === currentUser.name) {
+      setIsInHome(false);
+      setIsInProfile(true);
     } else {
       setIsInHome(false);
-      setIsInProfile(true); 
+      setIsInProfile(false); 
     }
-  }, [pathname]);
+  }, [pathname, anonId, currentUser]);
 
   if (pathname.startsWith('/chat')) return null;
 

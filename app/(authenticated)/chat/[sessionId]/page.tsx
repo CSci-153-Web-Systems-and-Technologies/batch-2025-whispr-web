@@ -1,16 +1,16 @@
 "use client"
 
-import { RealtimeChat } from '@/components/realtime-chat'
-import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import type { ChatMessage } from '@/hooks/use-realtime-chat';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { RealtimeChat } from '@/components/realtime-chat';
 import { useChatPartner } from '@/hooks/use-chat-partner';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { UseMessageQuery } from '@/hooks/use-message-query';
-import FeedbackDialog from './_components/FeedbackDialog';
+import type { ChatMessage } from '@/hooks/use-realtime-chat';
 import { useSession } from '@/hooks/use-session';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import FeedbackDialog from './_components/FeedbackDialog';
 
 interface ChatPageProps {
   params: Promise<{
@@ -121,6 +121,19 @@ export default function ChatPage({params}: ChatPageProps) {
   }, [sessionId]);
 
   const handleMessage = async (messages: ChatMessage[]) => {
+    if (!sessionId) return;
+
+    const { data: sessionExists } = await supabase
+      .from('chat_sessions')
+      .select('id')
+      .eq('id', sessionId)
+      .maybeSingle();
+      
+    if (!sessionExists) {
+      console.log('Session ended, skipping message storage');
+      return;
+    }
+
     const { error } = await supabase
       .from('chat_messages')
       .upsert(
@@ -134,10 +147,10 @@ export default function ChatPage({params}: ChatPageProps) {
         { onConflict: 'id' }
       );
 
-    if (error) console.error('Error storing messages:', error);
+    if (error) console.log('Error storing messages:', error);
   }
 
-  if (!currentUser || !partner ) return null;
+  if (!currentUser || !partner || !currentUser.role) return null;
 
   return (
     <div className='flex flex-1 h-screen border pt-20'>

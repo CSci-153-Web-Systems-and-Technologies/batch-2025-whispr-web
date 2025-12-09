@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from './ui/avatar';
 import { getInitials } from '@/lib/get-initials';
 
 interface CustomAvatarProps {
-  name: string;
+  name: string | undefined;
   isOwner?: boolean;
 }
 

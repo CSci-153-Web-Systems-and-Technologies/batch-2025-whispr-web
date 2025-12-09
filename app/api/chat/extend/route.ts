@@ -1,7 +1,5 @@
-// api/chat/extend/route.ts
-
-import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 const EXTENSION_DURATION = 3 * 60 * 1000; 
 
