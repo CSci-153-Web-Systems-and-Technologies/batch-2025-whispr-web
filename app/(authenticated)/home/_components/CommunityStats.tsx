@@ -14,25 +14,28 @@ import { useOnlineCount } from '@/hooks/use-online-count'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { createClient } from '@/utils/supabase/client'
 import { useLeaderboard } from '@/hooks/use-leaderboard'
+import Loading from '@/app/loading'
 
 const CommunityStats = () => {
   const supabase = createClient();
   const [streakCount, setStreakCount] = useState(0);
+  
   const onlineCount = useOnlineCount();
   const {currentUser} = useCurrentUser();
-  const { topListeners, topVenters } = useLeaderboard();
+  const { topListeners, topVenters, isLoading } = useLeaderboard();
 
   useEffect(() => {
-      const fetchStreakData = async () => {
-          const { data: streakData, error: streakError } = await supabase.rpc('get_mood_streaks');
-          if (streakData && !streakError) {
-            setStreakCount(streakData.current_streak); 
-          }
-      }
-      fetchStreakData();
-  }, [streakCount]);
-
-  if(!currentUser) return null;
+    if(!currentUser) return;
+    const fetchStreakData = async () => {
+        const { data: streakData, error: streakError } = await supabase.rpc('get_mood_streaks', {
+          target_user_id: currentUser?.id
+        });
+        if (streakData && !streakError) {
+          setStreakCount(streakData.current_streak); 
+        }
+    }
+    fetchStreakData();
+  }, [currentUser]);
 
   return (
     <div className='flex flex-col gap-4 sticky top-25'>
@@ -47,11 +50,11 @@ const CommunityStats = () => {
           </div>
           <div className='flex justify-between gap-5'>
             <span className='text-muted-foreground'>Your Listening Points</span>
-            <span className='font-semibold'>{currentUser.listeningPts}</span>
+            <span className='font-semibold'>{currentUser?.listeningPts || 0}</span>
           </div>
           <div className='flex justify-between gap-5'>
             <span className='text-muted-foreground'>Your Venting Points</span>
-            <span className='font-semibold'>{currentUser.ventingPts}</span>
+            <span className='font-semibold'>{currentUser?.ventingPts || 0}</span>
           </div>
           <div className='flex justify-between gap-5'>
             <span className='text-muted-foreground'>Your Streak</span>
@@ -67,7 +70,9 @@ const CommunityStats = () => {
         </CardHeader>
         <CardContent>
           {
-            topListeners.length === 0 ? (
+            isLoading ? (
+              <Loading />
+            ) : topListeners.length === 0 ? (
               <p className='text-center text-muted-foreground'>No data available</p>
             ) : 
               topListeners.map((user, index) => (
@@ -89,7 +94,9 @@ const CommunityStats = () => {
         </CardHeader>
         <CardContent>
           {
-            topVenters.length === 0 ? (
+            isLoading ? (
+              <Loading />
+            ) : topVenters.length === 0 ? (
               <p className='text-center text-muted-foreground'>No data available</p>
             ) : 
               topVenters.map((user, index) => (

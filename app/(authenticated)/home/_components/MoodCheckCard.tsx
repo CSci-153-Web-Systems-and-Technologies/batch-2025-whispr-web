@@ -14,16 +14,28 @@ import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
+import Loading from "@/app/loading";
 
 const MoodCheckCard = () => {
 
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [streakCount, setStreakCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchMoodData = async () => {
+      setIsLoading(true);
       const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
       
-      const { data: streakData, error: streakError } = await supabase.rpc('get_mood_streaks');
+      const { data: streakData, error: streakError } = await supabase.rpc('get_mood_streaks', {
+        target_user_id: user.id
+      });
+
       if (streakData && !streakError) {
         setStreakCount(streakData.current_streak); 
       }
@@ -31,10 +43,14 @@ const MoodCheckCard = () => {
       const { data: moodData } = await supabase
         .from('moods')
         .select('mood, created_at')
-        .order('created_at', { ascending: false }) // CORRECTION 2: Get the LATEST one
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
         .limit(1);
 
-      if (!moodData || moodData.length === 0) return;
+      if (!moodData || moodData.length === 0) {
+        setIsLoading(false);
+        return;
+      };
 
       const lastEntryDate = new Date(moodData[0].created_at).toDateString();
       const today = new Date().toDateString();
@@ -42,6 +58,8 @@ const MoodCheckCard = () => {
       if (lastEntryDate === today) {
         setSelectedMood(moodData[0].mood);
       }
+
+      setIsLoading(false);
   } 
 
   useEffect(() => {
@@ -50,6 +68,7 @@ const MoodCheckCard = () => {
   
   const handleCheckIn = async (mood: string) => {
     setSelectedMood(mood);
+    setIsLoading(true);
     const res = await fetch('/api/mood-checkin', {
       method: 'POST',
       headers: {
@@ -64,6 +83,7 @@ const MoodCheckCard = () => {
     } else {
       toast.error('Failed to save mood');
       setSelectedMood(null); 
+      setIsLoading(false);
     }
   }
 
@@ -76,23 +96,30 @@ const MoodCheckCard = () => {
             Remember, your feelings are valid. We're here when you need us.
           </CardDescription>
           <CardContent className="flex items-center justify-evenly mt-4 h-25">
-            <div className="flex items-center gap-3">
-              <Image
-                src={`${selectedMood}-feeling.svg`}
-                width={50} height={50}
-                alt={`${selectedMood} Feeling`}
-              />
-              <span className="font-medium text-2xl">{selectedMood}</span>
-            </div>
-            <Separator orientation="vertical"/>
-            <div className="flex items-center gap-3">
-              <Image
-                src='fire.svg'
-                width={50} height={50}
-                alt='streak icon'
-              />
-              <span className="font-medium text-2xl">{streakCount}</span>
-            </div>
+            {
+              isLoading ? (
+                <Loading />
+              ) :
+              <>
+                <div className="flex items-center gap-3">
+                <Image
+                  src={`${selectedMood}-feeling.svg`}
+                  width={50} height={50}
+                  alt={`${selectedMood} Feeling`}
+                />
+                <span className="font-medium text-2xl">{selectedMood}</span>
+              </div>
+              <Separator orientation="vertical"/>
+              <div className="flex items-center gap-3">
+                <Image
+                  src='fire.svg'
+                  width={50} height={50}
+                  alt='streak icon'
+                />
+                <span className="font-medium text-2xl">{streakCount}</span>
+              </div>
+            </>
+            }
           </CardContent>
       </CardHeader>
       </Card>
@@ -109,56 +136,63 @@ const MoodCheckCard = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className='flex justify-center items-center'>
-          <CardAction>
-            <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Neutral')}>
-              <Image
-                src="neutral-feeling.svg"
-                width={50} height={50}
-                alt='Neutral Feeling'
-              />
-              Neutral
-            </Button>
-          </CardAction>
-          <CardAction>
-            <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Happy')}>
-              <Image
-                src="happy-feeling.svg"
-                width={50} height={50}
-                alt='Happy Feeling'
-              />
-              Happy
-            </Button>
-          </CardAction>
-          <CardAction>
-            <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Sad')}>
-              <Image
-                src="sad-feeling.svg"
-                width={50} height={50}
-                alt='Sad Feeling'
-              />
-              Sad
-            </Button>
-          </CardAction>
-          <CardAction>
-            <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Anxious')}>
-              <Image
-                src="anxious-feeling.svg"
-                width={50} height={50}
-                alt='Anxious Feeling'
-              />
-              Anxious
-            </Button>
-          </CardAction>
-          <CardAction>
-            <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Frustated')}>
-              <Image
-                src="frustated-feeling.svg"
-                width={50} height={50}
-                alt='Frustated Feeling'
-              />
-              Frustated
-            </Button>
-          </CardAction>
+          {
+            isLoading ? (
+              <Loading />
+            ) : 
+            <>
+              <CardAction>
+                <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Neutral')}>
+                  <Image
+                    src="neutral-feeling.svg"
+                    width={50} height={50}
+                    alt='Neutral Feeling'
+                  />
+                  Neutral
+                </Button>
+              </CardAction>
+              <CardAction>
+                <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Happy')}>
+                  <Image
+                    src="happy-feeling.svg"
+                    width={50} height={50}
+                    alt='Happy Feeling'
+                  />
+                  Happy
+                </Button>
+              </CardAction>
+              <CardAction>
+                <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Sad')}>
+                  <Image
+                    src="sad-feeling.svg"
+                    width={50} height={50}
+                    alt='Sad Feeling'
+                  />
+                  Sad
+                </Button>
+              </CardAction>
+              <CardAction>
+                <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Anxious')}>
+                  <Image
+                    src="anxious-feeling.svg"
+                    width={50} height={50}
+                    alt='Anxious Feeling'
+                  />
+                  Anxious
+                </Button>
+              </CardAction>
+              <CardAction>
+                <Button variant="ghost" className='flex flex-col h-max hover:bg-transparent! hover:text-primary hover:scale-105' onClick={() => handleCheckIn('Frustated')}>
+                  <Image
+                    src="frustated-feeling.svg"
+                    width={50} height={50}
+                    alt='Frustated Feeling'
+                  />
+                  Frustated
+                </Button>
+              </CardAction>
+            </>
+          }
         </CardContent>
     </Card>
   )

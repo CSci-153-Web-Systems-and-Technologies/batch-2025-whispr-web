@@ -21,7 +21,11 @@ type Stats = {
   highestMoodStreak: number | null;
 }
 
-const ActivitySummary = () => {
+interface ActivitySummaryProps {
+  targetUserId: string;
+}
+
+const ActivitySummary = ({targetUserId}: ActivitySummaryProps) => {
   const supabase = createClient();
   const [stats, setStats] = useState<Stats>({
     listenedMinutes: 0,
@@ -35,11 +39,18 @@ const ActivitySummary = () => {
     const fetchStats = async () => {
       setIsLoading(true);
 
-      const activityReq = supabase.rpc('get_user_activity_stats');
-      const streakReq = supabase.rpc('get_mood_streaks');
+      const activityReq = supabase.rpc('get_user_activity_stats', {
+        target_user_id: targetUserId
+      });
+
+      const streakReq = supabase.rpc('get_mood_streaks', {
+        target_user_id: targetUserId
+      });
+
       const moodReq = supabase
         .from('moods')
         .select('mood, created_at')
+        .eq('user_id', targetUserId)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -72,9 +83,8 @@ const ActivitySummary = () => {
 
       setIsLoading(false);
     }
-
     fetchStats();
-  }, []);
+  }, [targetUserId]);
 
   return (
     <Card className='flex-1 h-max rounded-l-none border-l-0'>

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardAction,
@@ -41,7 +41,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({
-  id,
+  id, 
   anonId,
   content,
   createdAt,
@@ -49,8 +49,6 @@ const PostCard: React.FC<PostCardProps> = ({
   likesCount,
   distance,
   canManagePost,
-  onEdit,
-  onDelete,
 }) => {
   const supabase = createClient();
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -96,6 +94,14 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   }
 
+  const handleEdit = () => {
+
+  }
+
+  const handleDelete = () => {
+
+  }
+
   return (
     <Card onDoubleClick={handleLike}>
       <CardHeader className='flex justify-between items-center'>
@@ -125,12 +131,12 @@ const PostCard: React.FC<PostCardProps> = ({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit} className='cursor-pointer' asChild>
+                <DropdownMenuItem onClick={handleEdit} className='cursor-pointer' asChild>
                   <Button variant="ghost" className=" flex justify-start w-full group hover:bg-primary! hover:text-white!">
                     <Pencil className="mr-2 h-4 w-4 group-hover:fill-white group-hover:text-white text-"/> Edit
                   </Button>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete} className='cursor-pointer text-destructive' asChild>
+                <DropdownMenuItem onClick={handleDelete} className='cursor-pointer text-destructive' asChild>
                   <Button variant="ghost" className="flex justify-start w-full group hover:bg-destructive! hover:text-black! hover:ring-destructive/50!">
                     <Trash className="mr-2 h-4 w-4 group-hover:fill-black group-hover:text-black text-"/> Delete
                   </Button>
