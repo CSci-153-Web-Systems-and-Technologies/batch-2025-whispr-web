@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import PostCard from '@/components/PostCard';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import PostCard from '@/components/PostCard'
-import { createClient } from '@/utils/supabase/client';
+  CardTitle
+} from "@/components/ui/card";
 import { usePostsQuery } from '@/hooks/use-posts-query';
+import { createClient } from '@/utils/supabase/client';
+import { useEffect, useState } from 'react';
 
 interface UserFeedProps {
   targetUserId?: string; 

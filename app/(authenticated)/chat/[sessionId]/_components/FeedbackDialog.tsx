@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
+import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Image from 'next/image';
+  CardTitle
+} from "@/components/ui/card";
 import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { User } from '@/types';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/use-session';
+import { User } from '@/types';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const RATING_DESCRIPTIONS = {
   venter: [

@@ -2,8 +2,8 @@ export type User = {
   id: string;
   name: string; 
   role?: UserRole | null;
-  listeningPts: number;
-  ventingPts: number;
+  listeningPts?: number;
+  ventingPts?: number;
 };
 
 export type UserRole = 'venter' | 'listener'| null;

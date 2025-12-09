@@ -1,20 +1,18 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import Loading from '@/app/loading'
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
-import { useOnlineCount } from '@/hooks/use-online-count'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { createClient } from '@/utils/supabase/client'
 import { useLeaderboard } from '@/hooks/use-leaderboard'
-import Loading from '@/app/loading'
+import { useOnlineCount } from '@/hooks/use-online-count'
+import { createClient } from '@/utils/supabase/client'
+import { useEffect, useState } from 'react'
 
 const CommunityStats = () => {
   const supabase = createClient();

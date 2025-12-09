@@ -1,8 +1,8 @@
 "use client"
 
+import type { LeaderboardUser } from "@/types"
 import { createClient } from "@/utils/supabase/client"
 import { useEffect, useState } from "react"
-import type { LeaderboardUser } from "@/types"
 
 
 

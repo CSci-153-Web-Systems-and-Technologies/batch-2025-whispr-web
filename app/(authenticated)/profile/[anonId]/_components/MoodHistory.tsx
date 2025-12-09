@@ -1,16 +1,16 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import { ScrollArea } from '@/components/ui/scroll-area';
-import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 interface MoodHistoryProps {
   targetUserId: string | null;

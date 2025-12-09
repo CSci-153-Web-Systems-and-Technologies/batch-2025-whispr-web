@@ -53,7 +53,7 @@ export function usePostsQuery() {
 
   useEffect(() => {
     fetchPosts();
-  }, [fetchPosts]);
+  }, []);
 
   return { posts, refetch: fetchPosts }
 }

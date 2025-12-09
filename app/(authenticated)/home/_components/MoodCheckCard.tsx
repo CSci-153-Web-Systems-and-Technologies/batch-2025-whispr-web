@@ -1,5 +1,7 @@
 "use client" 
 
+import Loading from "@/app/loading";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardAction,
@@ -7,14 +9,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
-import { useEffect, useState } from "react";
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
+import Image from 'next/image';
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import Loading from "@/app/loading";
 
 const MoodCheckCard = () => {
 
@@ -103,7 +103,7 @@ const MoodCheckCard = () => {
               <>
                 <div className="flex items-center gap-3">
                 <Image
-                  src={`${selectedMood}-feeling.svg`}
+                  src={`${selectedMood.toLowerCase()}-feeling.svg`}
                   width={50} height={50}
                   alt={`${selectedMood} Feeling`}
                 />

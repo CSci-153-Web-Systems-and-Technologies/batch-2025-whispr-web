@@ -1,10 +1,10 @@
 'use client'
 
-import React, {useEffect, useState} from "react"
-import { createClient } from '@/utils/supabase/client';
-import { toast } from "sonner";
 import type { User } from "@/types";
+import { createClient } from '@/utils/supabase/client';
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function useCurrentUser(){
   const [currentUser, setCurrentUser] = useState<User | null>(null);

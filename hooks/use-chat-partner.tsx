@@ -52,7 +52,7 @@ export function useChatPartner(sessionId: string, currentUserId: string) {
           setPartner({ 
             id: partnerId, 
             name: user.anon_id,
-            role: partnerRole
+            role: partnerRole,
           })
         }
       } catch (error) {

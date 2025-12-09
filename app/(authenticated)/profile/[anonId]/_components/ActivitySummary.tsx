@@ -1,18 +1,15 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import Loading from '@/app/loading';
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Image from 'next/image'
+  CardTitle
+} from "@/components/ui/card";
 import { createClient } from '@/utils/supabase/client';
-import Loading from '@/app/loading'
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 type Stats = {
   listenedMinutes: number | null;

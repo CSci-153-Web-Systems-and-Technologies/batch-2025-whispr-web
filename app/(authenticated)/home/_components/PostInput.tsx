@@ -1,15 +1,15 @@
 "use client"
 
-import React, { useState } from 'react'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardFooter,
 } from "@/components/ui/card"
 import { Textarea } from '@/components/ui/textarea'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Send, User } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 
 const PostInput = () => {

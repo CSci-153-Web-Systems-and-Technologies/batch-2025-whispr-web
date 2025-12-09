@@ -1,19 +1,17 @@
 "use client"
 
 import PostCard from '@/components/PostCard'
-import PostInput from './PostInput'
-import { Post } from '@/types'
-import { usePostsQuery } from '@/hooks/use-posts-query'
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle,
+  EmptyTitle
 } from "@/components/ui/empty"
+import { usePostsQuery } from '@/hooks/use-posts-query'
+import { Post } from '@/types'
 import { MessageCircleDashed } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import PostInput from './PostInput'
 
 const CommunityWall = () => {
   const { posts } = usePostsQuery();

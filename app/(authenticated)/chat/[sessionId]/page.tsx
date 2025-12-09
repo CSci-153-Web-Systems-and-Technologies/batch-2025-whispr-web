@@ -1,16 +1,16 @@
 "use client"
 
-import { RealtimeChat } from '@/components/realtime-chat'
-import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import type { ChatMessage } from '@/hooks/use-realtime-chat';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { RealtimeChat } from '@/components/realtime-chat';
 import { useChatPartner } from '@/hooks/use-chat-partner';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { UseMessageQuery } from '@/hooks/use-message-query';
-import FeedbackDialog from './_components/FeedbackDialog';
+import type { ChatMessage } from '@/hooks/use-realtime-chat';
 import { useSession } from '@/hooks/use-session';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import FeedbackDialog from './_components/FeedbackDialog';
 
 interface ChatPageProps {
   params: Promise<{

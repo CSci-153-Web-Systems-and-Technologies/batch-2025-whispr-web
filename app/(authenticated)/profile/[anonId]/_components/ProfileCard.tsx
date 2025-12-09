@@ -1,16 +1,16 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import Loading from '@/app/loading'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   Card,
   CardContent,
 } from "@/components/ui/card"
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { User } from '@/types'
-import { User as UserIcon} from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
+import { User as UserIcon } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import Loading from '@/app/loading'
+import { useEffect, useState } from 'react'
 
 const ProfileCard = () => {
   const supabase = createClient();

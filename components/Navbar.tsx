@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState }from 'react'
-import { Button } from './ui/button'
-import { useParams, usePathname } from 'next/navigation';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { House, User } from 'lucide-react';
 import Link from 'next/link';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useParams, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
 
 const Navbar = () => {
   const [isInHome, setIsInHome] = useState(false);

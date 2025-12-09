@@ -1,5 +1,5 @@
-import adjectivesData from '@/data/adjectives.json'
-import beingsData from '@/data/beings.json'
+import adjectivesData from '@/data/adjectives.json';
+import beingsData from '@/data/beings.json';
 
 export function generateAnonId():string  {
   const adjectives: string[] = adjectivesData.adjectives;

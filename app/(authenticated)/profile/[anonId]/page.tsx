@@ -1,12 +1,12 @@
 "use client"
 
-import React, { Activity, useEffect, useState } from 'react'
-import ProfileCard from './_components/ProfileCard'
-import ActivitySummary from './_components/ActivitySummary'
-import MoodHistory from './_components/MoodHistory'
-import UserFeed from './_components/UserFeed'
 import { createClient } from '@/utils/supabase/client'
 import { useParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import ActivitySummary from './_components/ActivitySummary'
+import MoodHistory from './_components/MoodHistory'
+import ProfileCard from './_components/ProfileCard'
+import UserFeed from './_components/UserFeed'
 
 const page = () => {
   const supabase = createClient();

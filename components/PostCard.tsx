@@ -1,31 +1,27 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-  CardDescription
+  CardTitle
 } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { toast } from 'sonner'
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from '@/components/ui/button'
-import { Heart, MoreVertical, Pencil, Trash } from 'lucide-react'
-import { getInitials } from '@/lib/get-initials'
-import CustomAvatar from './CustomAvatar'
 import { createClient } from '@/utils/supabase/client'
+import { Heart, MoreVertical, Pencil, Trash } from 'lucide-react'
 import Link from 'next/link'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
+import CustomAvatar from './CustomAvatar'
 
 interface PostCardProps {
   id: string;

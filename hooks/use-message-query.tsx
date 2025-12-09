@@ -1,8 +1,8 @@
 "use client"
 
-import { createClient } from '@/utils/supabase/client'
-import { useEffect, useState } from 'react';
 import type { ChatMessage } from '@/hooks/use-realtime-chat';
+import { createClient } from '@/utils/supabase/client';
+import { useEffect, useState } from 'react';
 
 export function UseMessageQuery(sessionId: string) {
   const supabase = createClient();
