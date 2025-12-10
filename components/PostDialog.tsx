@@ -77,8 +77,15 @@ const PostDialog = ({children, dialogType, postId, initialContent, onSuccess, op
         let res;
         let location;
         if (dialogType === 'add') {
-          const loc = await getCurrentLocation();
-          location = { latitude: loc.lat, longitude: loc.lng };
+          try {
+            const loc = await getCurrentLocation();
+            location = { latitude: loc.lat, longitude: loc.lng };
+          } catch (error: any) {
+            toast.error(error.message);
+            setIsLoading(false);
+            return;
+          }
+
           res = await fetch('/api/post/add', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -148,6 +155,7 @@ const PostDialog = ({children, dialogType, postId, initialContent, onSuccess, op
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  spellCheck={false}
                 />
             </div>
           </div>

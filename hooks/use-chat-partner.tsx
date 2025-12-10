@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
 import type { User } from '@/types'
+import { createClient } from '@/utils/supabase/client'
+import { useEffect, useState } from 'react'
 
 export function useChatPartner(sessionId: string, currentUserId: string) {
   const [partner, setPartner] = useState<User | null>(null)
@@ -14,20 +14,20 @@ export function useChatPartner(sessionId: string, currentUserId: string) {
     const getPartner = async () => {
       try {
         // Get all participants in this session
-        const { data: participants } = await supabase
+        const { data: session } = await supabase
           .from('chat_sessions')
-          .select('user_a, user_b')
+          .select('user_a, user_b, user_a_role, user_b_role, distance_meters')
           .eq('id', sessionId)
           .single()
 
-        if (!participants) {
+        if (!session) {
           return
         }
 
         // Find the partner
-        const partnerId = participants.user_a === currentUserId 
-          ? participants.user_b 
-          : participants.user_a;
+        const partnerId = session.user_a === currentUserId 
+          ? session.user_b 
+          : session.user_a;
 
         // Get partner's anon name
         const { data: user } = await supabase
@@ -35,14 +35,6 @@ export function useChatPartner(sessionId: string, currentUserId: string) {
           .select('anon_id')
           .eq('id', partnerId)
           .single()
-
-        const { data: session } = await supabase
-          .from('chat_sessions')
-          .select('user_a, user_b, user_a_role, user_b_role')
-          .eq('id', sessionId)
-          .single()
-
-        if (!session) return;
 
         const partnerRole = session.user_a === partnerId
           ? session.user_a_role
@@ -53,6 +45,7 @@ export function useChatPartner(sessionId: string, currentUserId: string) {
             id: partnerId, 
             name: user.anon_id,
             role: partnerRole,
+            distance: session.distance_meters
           })
         }
       } catch (error) {

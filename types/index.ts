@@ -4,6 +4,7 @@ export type User = {
   role?: UserRole | null;
   listeningPts?: number;
   ventingPts?: number;
+  distance?: number;
 };
 
 export type UserRole = 'venter' | 'listener'| null;

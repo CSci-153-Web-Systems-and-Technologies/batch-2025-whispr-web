@@ -107,7 +107,7 @@ const PostCard: React.FC<PostCardProps> = ({
             </Link>
             <CardDescription className='text-xs text-muted-foreground'>
               {`${getDate()} • ${getTime()} `}
-              {distance ? `• ${distance.toFixed(1)}m away` : ''}
+              {distance ? `• ${(distance / 1000).toFixed(1)}km away` : ''}
             </CardDescription>
           </div>
         </div>

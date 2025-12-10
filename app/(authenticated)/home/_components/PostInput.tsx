@@ -38,6 +38,7 @@ const PostInput = ({ onPostChange }: PostInputProps) => {
                 className='rounded-3xl min-h-10 max-h-50 resize-none overflow-y-auto whitespace-pre-wrap flex-1'
                 value={postContent}
                 onChange={handleChange}
+                readOnly
               />
             </PostDialog>
           </div>
