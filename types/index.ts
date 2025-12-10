@@ -16,7 +16,7 @@ export type Post = {
   likesCount: number;
   isLikedByMe: boolean;
   created_at: string;
-  distance: number;
+  distance?: number;
   canManagePost?: boolean;
 }
 

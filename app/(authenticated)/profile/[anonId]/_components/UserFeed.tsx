@@ -18,7 +18,7 @@ const UserFeed = ({targetUserId}: UserFeedProps) => {
   const supabase = createClient()
 
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const { posts, refetch } = usePostsQuery();
+  const { posts, refetch } = usePostsQuery(false);
 
   useEffect(() => {
     const fetchCurrentUserId = async () => {

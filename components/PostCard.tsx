@@ -30,7 +30,7 @@ interface PostCardProps {
   content?: string;
   createdAt?: string;
   likesCount: number;
-  distance: number;
+  distance?: number;
   canManagePost?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -106,11 +106,8 @@ const PostCard: React.FC<PostCardProps> = ({
               <CardTitle className='text-sm'>{anonId || 'Anonymous'}</CardTitle>
             </Link>
             <CardDescription className='text-xs text-muted-foreground'>
-              {`
-                ${getDate()} • 
-                ${getTime()} • 
-                ${distance.toFixed(1)}m away
-              `}
+              {`${getDate()} • ${getTime()} `}
+              {distance ? `• ${distance.toFixed(1)}m away` : ''}
             </CardDescription>
           </div>
         </div>
