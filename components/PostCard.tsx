@@ -106,11 +106,8 @@ const PostCard: React.FC<PostCardProps> = ({
               <CardTitle className='text-sm'>{anonId || 'Anonymous'}</CardTitle>
             </Link>
             <CardDescription className='text-xs text-muted-foreground'>
-              {`
-                ${getDate()} • 
-                ${getTime()} • 
-                1.0km away
-              `}
+              {`${getDate()} • ${getTime()} `}
+              {distance ? `• ${(distance / 1000).toFixed(1)}km away` : ''}
             </CardDescription>
           </div>
         </div>

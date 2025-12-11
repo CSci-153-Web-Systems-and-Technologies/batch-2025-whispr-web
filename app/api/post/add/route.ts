@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { content } = await request.json();
+    const { content, location  } = await request.json();
 
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
       return NextResponse.json({ error: "Content cannot be empty" }, { status: 400 });
@@ -21,23 +21,23 @@ export async function POST(request: Request) {
        return NextResponse.json({ error: "Content exceeds 500 characters" }, { status: 400 });
     }
 
-    const { data, error } = await supabase
-      .from('posts')
-      .insert([
-        {
-          author_id: user.id,  
-          content: content.trim(),
-        }
-      ])
-      .select()
-      .single();
+    if (!location || typeof location.latitude !== 'number' || typeof location.longitude !== 'number') {
+      return NextResponse.json({ error: "Invalid or missing location data" }, { status: 400 });
+    }
 
-    if (error) {
-      console.error("Database Error:", error);
+    const {error: createPostError} = await supabase.rpc('create_post', {
+      p_content: content.trim(),
+      p_author_id: user.id,
+      p_long: location.longitude,
+      p_lat: location.latitude
+    })
+
+    if (createPostError) {
+      console.error("Database Error:", createPostError);
       return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
     }
 
-    return NextResponse.json(data, { status: 201 });
+    return NextResponse.json({ message: "Post created successfully" }, { status: 200 });
 
   } catch (error) {
     console.error("Server Error:", error);

@@ -53,6 +53,7 @@ const CommunityWall = () => {
                 createdAt={post.created_at}
                 onPostChange={refetch}
                 canManagePost={post.canManagePost}
+                distance={post.distance}
               />
             ))
           )
