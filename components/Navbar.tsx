@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { House, LogOut, Menu, User } from 'lucide-react';
+import { Ellipsis, House, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -62,7 +62,7 @@ const Navbar = () => {
           <DropdownMenuItem asChild>
             <Link href="/profile" aria-label='Go to Home Page'>
               <Button variant={isInProfile ? 'default' : 'ghost'} className='rounded-md w-full'>
-                <User strokeWidth={3} className={isInProfile ? 'text-white' : 'text-black'}/>
+                <User strokeWidth={2} className={isInProfile ? 'text-white' : 'text-black'}/>
                 Profile
               </Button>
             </Link>
@@ -77,7 +77,7 @@ const Navbar = () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className='hidden sm:flex'>
+      <div className='max-sm:hidden flex items-center'>
         <Link href="/home" aria-label='Go to Home Page'>
           <Button variant={isInHome ? "default" : "outline"} className='mr-4 rounded-full hover:fill-'>
             <House fill={isInHome ? "white" : "none"} strokeWidth={3}/>
@@ -90,6 +90,19 @@ const Navbar = () => {
             {isInProfile ? "Profile" : ""}
           </Button>
         </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Ellipsis className="text-primary" strokeWidth={3}/>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="mr-10" align="end">
+            <DropdownMenuItem variant="destructive" asChild>
+              <Link href="/logout" aria-label='Go to Logout Page'>
+                <LogOut className="text-inherit" strokeWidth={3}/>
+                Logout
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )
