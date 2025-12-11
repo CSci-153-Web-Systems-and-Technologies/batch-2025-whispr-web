@@ -20,7 +20,7 @@ const ChatHeader = ({ sessionId }: { sessionId: string }) => {
   if (!currentUser || !partner) null;
 
   return (
-    <nav className='flex items-center justify-between h-20 px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
+    <nav className='flex items-center justify-between h-20 px-5 sm:px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
       {/* Partner Info */}
       <div className='flex items-center gap-3'>
         <CustomAvatar name={partner?.name} />
@@ -34,7 +34,7 @@ const ChatHeader = ({ sessionId }: { sessionId: string }) => {
       </div>
 
       {/* User Role */}
-      <div className='flex items-center gap-2 bg-primary px-4 py-2 rounded-full text-white'>
+      <div className='flex items-center gap-2 bg-primary px-4 py-2 rounded-full text-white max-sm:hidden'>
         <MessageSquareMore className='h-4 w-4 ' />
         <span className='font-normal text-sm'>
           {`You're ${currentUser?.role === 'venter' ? 'Venting' : 'Listening'}`}
