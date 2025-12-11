@@ -41,7 +41,7 @@ export function WaitingDialog({
         </div>
 
         <DialogHeader className="items-center">
-          <DialogTitle className="text-2xl font-bold">{title}</DialogTitle>
+          <DialogTitle className="text-xl sm:text-2xl font-bold">{title}</DialogTitle>
           <DialogDescription className="text-center">
             {description}
           </DialogDescription>
@@ -58,7 +58,7 @@ export function WaitingDialog({
 
           <Button 
             variant="secondary" 
-            className="w-full max-w-[200px]"
+            className="w-full sm:max-w-[200px]"
             onClick={onCancel}
           >
             Cancel

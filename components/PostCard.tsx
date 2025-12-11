@@ -152,7 +152,7 @@ const PostCard: React.FC<PostCardProps> = ({
           )}
         </div>
       </CardHeader>
-      <CardContent className='whitespace-pre-wrap wrap-break-word'>{content}</CardContent>
+      <CardContent className='whitespace-pre-wrap wrap-break-word pl-8'>{content}</CardContent>
       <CardFooter>
         <CardAction className='flex items-center'>
           <Button variant="ghost" onClick={handleLike} className='hover:bg-transparent hover:text-destructive hover:scale-105'>
