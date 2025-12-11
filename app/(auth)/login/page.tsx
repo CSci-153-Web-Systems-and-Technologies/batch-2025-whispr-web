@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useState } from 'react'
 import FormField from '@/components/FormField'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@radix-ui/react-label'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 
 interface AuthErrorTypes{
@@ -80,7 +80,7 @@ const Login = () => {
       <h3 className='text-primary text-3xl font-bold mb-5' >Welcome Back!</h3>
 
       {/* Form Fields */}
-      <form onSubmit={handleSubmit} className='w-full flex flex-col items-center gap-4'>
+      <form onSubmit={handleSubmit} className='w-full flex max-sm:flex-1 flex-col items-center gap-4'>
         <div className='flex flex-col gap-4 w-full'>
           <FormField
             id="anonymousId"

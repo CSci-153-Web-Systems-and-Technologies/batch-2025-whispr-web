@@ -1,14 +1,14 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import FormField from '@/components/FormField'
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { generateAnonId, generatePassword } from '@/lib/generateCredential'
 import { Download } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { Spinner } from '@/components/ui/spinner'
 
 const page = () => {
   const [credentials, setCredentials] = useState<{anonId: string, password: string}>({
@@ -120,7 +120,7 @@ const page = () => {
         </div>
       </form>
 
-      <div className='flex items-center justify-center gap-2 w-full text-sm mt-10'>
+      <div className='flex items-center justify-center gap-2 w-full text-sm mt-10 max-sm:mt-auto'>
         <span>{"Already have an account?"}</span>
         <Link href="/login" className='text-primary font-semibold hover:underline'>
           Sign in
