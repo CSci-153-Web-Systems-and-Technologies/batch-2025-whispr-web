@@ -46,7 +46,7 @@ const ProfileCard = () => {
 
 
   return (
-    <Card className='flex flex-1 justify-center rounded-r-none'>
+    <Card className='flex flex-1 justify-center max-sm:rounded-b-none sm:rounded-r-none'>
       <CardContent className='flex flex-col items-center justify-center'>
         {
           isLoading || !userProfile ? 
@@ -58,14 +58,14 @@ const ProfileCard = () => {
                 </AvatarFallback>
               </Avatar>
               <h1 className='text-xl font-semibold mt-5'>{userProfile?.name || 'AnonymousUser'}</h1>
-              <div className='flex gap-5 mt-5'>
+              <div className='flex  gap-5 mt-5'>
                 <div className='flex flex-col items-center border rounded-lg shadow-md p-5'>
                   <span className='text-primary text-2xl font-semibold'>{userProfile?.listeningPts}</span>
-                  <span className='text-muted-foreground text-sm'>Listening Points</span>
+                  <span className='text-muted-foreground text-xs sm:text-sm text-center'>Listening Points</span>
                 </div>
                 <div className='flex flex-col items-center border rounded-lg shadow-md p-5 '>
                   <span className='text-primary text-2xl font-semibold'>{userProfile?.ventingPts}</span>
-                  <span className='text-muted-foreground text-sm'>Venting Points</span>
+                  <span className='text-muted-foreground text-xs sm:text-sm text-center'>Venting Points</span>
                 </div>
               </div> 
             </>
