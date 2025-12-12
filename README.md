@@ -13,7 +13,7 @@
   [![Supabase](https://img.shields.io/badge/Supabase-Database-3FCF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
 
-  [Live Demo](https://whispr.vercel.app) · [Report Bug](../../issues) · [Request Feature](../../issues)
+  [Live Demo](https://whispr-ph.vercel.app) · [Report Bug](../../issues) · [Request Feature](../../issues)
 
 </div>
 
@@ -24,9 +24,7 @@
 - [About](#-about)
 - [Key Features](#-key-features)
 - [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
 - [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
 - [Project Structure](#-project-structure)
 - [Security & Privacy](#-security--privacy)
 - [Rate Limiting](#-rate-limiting)
