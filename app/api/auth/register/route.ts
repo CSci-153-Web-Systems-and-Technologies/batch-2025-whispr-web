@@ -1,8 +1,20 @@
+import { checkRegistrationLimit, getClientIp } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 3 registrations per IP per month
+    const ip = getClientIp(request);
+    const { allowed, remaining } = await checkRegistrationLimit(ip);
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many accounts created. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { anonId, password } = body;
 
