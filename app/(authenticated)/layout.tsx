@@ -8,8 +8,8 @@ export default function AuthenticatedLayout({
 }>) {
   return(
     <SessionProvider>
+      <HeaderWrapper />
       <main>
-        <HeaderWrapper />
         {children}
       </main>
     </SessionProvider>

@@ -58,7 +58,7 @@ const MoodHistory = ({targetUserId}: MoodHistoryProps) => {
   const daysArray = Array.from({ length: currentDay }, (_, i) => i + 1).reverse(); 
 
   return (
-    <Card className='w-125 h-max'>
+    <Card className='max-lg:flex-1 lg:w-125 h-max'>
       <CardHeader>
         <CardTitle>Mood History</CardTitle>
         <CardDescription>
@@ -70,7 +70,7 @@ const MoodHistory = ({targetUserId}: MoodHistoryProps) => {
             {`${monthName} ${year}`}
           </h1>
           
-          <ScrollArea className='rounded-md border p-2 h-[400px]'> 
+          <ScrollArea className='rounded-md border p-2 h-75 md:h-78 lg:h-[400px]'> 
             <div className='flex flex-col gap-2'>
               {
                 daysArray.map((dayNum) => {

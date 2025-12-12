@@ -1,20 +1,18 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { ChatMessageItem } from '@/components/chat-message'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import {
   type ChatMessage,
   useRealtimeChat,
 } from '@/hooks/use-realtime-chat'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Lock, LogOut, Send } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Lock, Send } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ExtendDialog from './ExtendDialog'
-import { useRouter } from 'next/navigation'
 import LeaveChatDialog from './LeaveChatDialog'
-import { useSession } from '@/hooks/use-session'
 
 interface RealtimeChatProps {
   roomName: string
@@ -97,9 +95,9 @@ export const RealtimeChat = ({
       </div>
       {/* Messages */}
       <div ref={containerRef} className={`flex-1 overflow-y-auto p-4 space-y-4 relative`}>
-        <div className={`flex items-center justify-center text-muted-foreground rounded-md border border-dashed border-black py-3 px-4 w-max mx-auto`}>
-            <Lock className="inline size-4 mr-2" />
-            <span className='text-sm'>
+        <div className={`flex items-center justify-center text-muted-foreground rounded-md border border-dashed border-black py-3 px-4 sm:w-max sm:mx-auto`}>
+            <Lock className="inline size-10 sm:size-4 mr-2" />
+            <span className='text-sm wrap-anywhere'>
               Your identity is completely anonymous and this conversation will be deleted once the session ends.
             </span>
           </div>

@@ -36,8 +36,8 @@ const CommunityStats = () => {
   }, [currentUser]);
 
   return (
-    <div className='flex flex-col gap-4 sticky top-25'>
-      <Card className='w-75 h-max'>
+    <div className='flex flex-col max-md:flex-1 md:w-75 gap-4 relative top-0 md:sticky tsm:top-25'>
+      <Card className='w-full h-max'>
         <CardHeader>
           <CardTitle>Community Stats</CardTitle>
         </CardHeader>
@@ -61,7 +61,7 @@ const CommunityStats = () => {
         </CardContent>
       </Card>
 
-      <Card className='w-75 h-max'>
+      <Card className='w-full h-max'>
         <CardHeader>
           <CardTitle>Top Listener</CardTitle>
           <CardDescription>Honoring the kind souls who lend a listening ear.</CardDescription>
@@ -85,7 +85,7 @@ const CommunityStats = () => {
         </CardContent>
       </Card>
 
-      <Card className='w-75 h-max'>
+      <Card className='w-full h-max'>
         <CardHeader>
           <CardTitle>Top Venter</CardTitle>
           <CardDescription>Recognizing the courage to be open and vulnerable.</CardDescription>

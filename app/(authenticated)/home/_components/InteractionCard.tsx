@@ -129,7 +129,7 @@ const InteractionCard = () => {
       onCancel={stopMatching}
     />
 
-    <Card className='w-160'>
+    <Card className='flex flex-1'>
       <CardHeader>
         <CardTitle>Choose your role</CardTitle>
         <CardDescription>
@@ -137,8 +137,8 @@ const InteractionCard = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col w-full'> 
-        <div className='flex justify-center items-center gap-3 w-full'>
-          <CardAction className='flex-1'>
+        <div className='flex flex-col sm:flex-row justify-center items-center gap-3 w-full'>
+          <CardAction className='w-full sm:flex-1 '>
             <Button 
               className='w-full h-11 text-base' 
               onClick={() => handleMatching('venter')}
@@ -147,7 +147,7 @@ const InteractionCard = () => {
               Venter
             </Button>
           </CardAction>
-          <CardAction className='flex-1'>
+          <CardAction className='w-full sm:flex-1'>
             <Button 
               variant="secondary" 
               className='w-full h-11 text-base' 

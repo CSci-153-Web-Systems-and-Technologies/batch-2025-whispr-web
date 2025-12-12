@@ -92,7 +92,7 @@ const FeedbackDialog = ({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-      <Card className='w-130 py-10 shadow-lg'>
+      <Card className='sm:w-130 py-10 shadow-lg'>
         <CardHeader className='flex flex-col justify-center items-center text-center'>
           <div className='flex items-center justify-center bg-secondary p-2 w-max rounded-full'>
             <Image 

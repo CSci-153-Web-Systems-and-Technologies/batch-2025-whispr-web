@@ -1,11 +1,11 @@
 'use client'
 
-import React, { createContext, useEffect, useState, useRef, ReactNode, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useParams, useRouter } from 'next/navigation'
+import React, { createContext, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
-const WARNING_THRESHOLD = 15
+const WARNING_THRESHOLD = 60 * 10;
 const CRITICAL_THRESHOLD = 5
 
 export interface SessionContextType {

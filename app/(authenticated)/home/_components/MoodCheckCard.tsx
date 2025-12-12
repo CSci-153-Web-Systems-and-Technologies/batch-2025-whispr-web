@@ -89,9 +89,9 @@ const MoodCheckCard = () => {
 
   if (selectedMood) {
     return (
-      <Card className='flex w-160 h-55 shrink-0 '>
+      <Card className='flex flex-1 '>
         <CardHeader>
-          <CardTitle>Check-in Complete!</CardTitle>
+          <CardTitle className="text-primary">Check-in Complete!</CardTitle>
           <CardDescription>
             Remember, your feelings are valid. We're here when you need us.
           </CardDescription>
@@ -101,13 +101,13 @@ const MoodCheckCard = () => {
                 <Loading />
               ) :
               <>
-                <div className="flex items-center gap-3">
+                <div className="flex max-sm:flex-col items-center gap-1 sm:gap-3">
                 <Image
                   src={`${selectedMood.toLowerCase()}-feeling.svg`}
                   width={50} height={50}
                   alt={`${selectedMood} Feeling`}
                 />
-                <span className="font-medium text-2xl">{selectedMood}</span>
+                <span className="font-medium sm-lg sm:text-2xl">{selectedMood}</span>
               </div>
               <Separator orientation="vertical"/>
               <div className="flex items-center gap-3">
@@ -128,14 +128,14 @@ const MoodCheckCard = () => {
   }
 
   return (
-    <Card className='flex w-160 shrink-0'>
+    <Card className='flex flex-1'>
       <CardHeader>
           <CardTitle>How are you feeling?</CardTitle>
           <CardDescription>
             Track your mood throughout the day by logging how you feel.
           </CardDescription>
         </CardHeader>
-        <CardContent className='flex justify-center items-center'>
+        <CardContent className='flex flex-wrap justify-center items-center'>
           {
             isLoading ? (
               <Loading />

@@ -1,12 +1,10 @@
 "use client"
 
-import React, { useState } from 'react'
 import FormField from '@/components/FormField'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@radix-ui/react-label'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 
 interface AuthErrorTypes{
@@ -80,29 +78,26 @@ const Login = () => {
       <h3 className='text-primary text-3xl font-bold mb-5' >Welcome Back!</h3>
 
       {/* Form Fields */}
-      <form onSubmit={handleSubmit} className='w-full flex flex-col items-center gap-4'>
+      <form onSubmit={handleSubmit} className='w-full flex max-sm:flex-1 flex-col items-center gap-4'>
         <div className='flex flex-col gap-4 w-full'>
           <FormField
             id="anonymousId"
-            type= "text"
+            type="text"
             label="Anonymous ID"
+            autoComplete="username"
             error={errors.anonIdError}
             onChange={(e) => handleChange("anonIdError", e.target.value)}
           />
           <FormField
             id="password"
-            type= "password"
+            type="password"
             label="Password"
+            autoComplete="current-password"
             error={errors.passwordError}
             onChange={(e) => handleChange("passwordError", e.target.value)}
           />
         </div>
 
-        {/* Remember Me Checkbox */}
-        <div className="flex items-center gap-2 justify-start ml-0 w-full">
-          <Checkbox id="rememberMe" />
-          <Label htmlFor="rememberMe" className='text-sm'>Remember Me</Label>
-        </div>
         <Button type='submit' className='w-full mt-5 cursor-pointer'>Sign In</Button>
       </form>
 

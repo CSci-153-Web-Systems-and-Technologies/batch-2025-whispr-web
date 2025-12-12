@@ -1,11 +1,18 @@
 "use client"
 
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { House, User } from 'lucide-react';
+import { Ellipsis, House, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Button } from './ui/button';
+
 
 const Navbar = () => {
   const [isInHome, setIsInHome] = useState(false);
@@ -39,9 +46,40 @@ const Navbar = () => {
   return (
     <div className='flex items-center justify-between py-4 px-10 shadow-md fixed top-0 left-0 right-0 z-10 bg-white'>
       <span className='text-primary text-xl font-medium'>WHISPR</span>
-      <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger className='text-primary sm:hidden'>
+          <Menu />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem asChild>
+            <Link href="/home" aria-label='Go to Home Page'>
+              <Button variant={isInHome ? 'default' : 'ghost'} className='rounded-md w-full'>
+                <House fill={isInHome ? "white" : "none"} className={isInHome ? 'text-white' : 'text-black'}/>
+                Home
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/profile" aria-label='Go to Home Page'>
+              <Button variant={isInProfile ? 'default' : 'ghost'} className='rounded-md w-full'>
+                <User strokeWidth={2} className={isInProfile ? 'text-white' : 'text-black'}/>
+                Profile
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/logout" aria-label='Go to Home Page'>
+              <Button variant='ghost' className='rounded-md w-full text-destructive'>
+                <LogOut className="text-inherit" strokeWidth={3}/>
+                Logout
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <div className='max-sm:hidden flex items-center'>
         <Link href="/home" aria-label='Go to Home Page'>
-          <Button variant={isInHome ? "default" : "outline"} className='mr-4 rounded-full'>
+          <Button variant={isInHome ? "default" : "outline"} className='mr-4 rounded-full hover:fill-'>
             <House fill={isInHome ? "white" : "none"} strokeWidth={3}/>
             {isInHome ? "Home" : ""}
           </Button>
@@ -52,6 +90,19 @@ const Navbar = () => {
             {isInProfile ? "Profile" : ""}
           </Button>
         </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Ellipsis className="text-primary" strokeWidth={3}/>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="mr-10" align="end">
+            <DropdownMenuItem variant="destructive" asChild>
+              <Link href="/logout" aria-label='Go to Logout Page'>
+                <LogOut className="text-inherit" strokeWidth={3}/>
+                Logout
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )
