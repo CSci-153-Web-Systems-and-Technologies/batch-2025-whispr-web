@@ -153,7 +153,7 @@ export default function ChatPage({params}: ChatPageProps) {
   if (!currentUser || !partner || !currentUser.role) return null;
 
   return (
-    <div className='flex flex-1 h-screen border pt-20'>
+    <div className='flex flex-1 h-dvh border pt-20'>
       {showFeedbackDialog && 
         <FeedbackDialog 
           sessionId={sessionId}
