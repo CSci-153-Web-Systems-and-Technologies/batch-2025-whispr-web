@@ -17,6 +17,13 @@ const registrationLimiter = new Ratelimit({
   prefix: "whispr:register",
 });
 
+// Login rate limit: 5 attempts per 15 minutes per IP
+const loginLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "15 m"),
+  prefix: "whispr:login",
+});
+
 export async function checkRateLimit(identifier: string) {
   const { success, remaining, reset } = await generalLimiter.limit(identifier);
   return { allowed: success, remaining, resetAt: reset };
@@ -24,6 +31,11 @@ export async function checkRateLimit(identifier: string) {
 
 export async function checkRegistrationLimit(identifier: string) {
   const { success, remaining, reset } = await registrationLimiter.limit(identifier);
+  return { allowed: success, remaining, resetAt: reset };
+}
+
+export async function checkLoginLimit(identifier: string) {
+  const { success, remaining, reset } = await loginLimiter.limit(identifier);
   return { allowed: success, remaining, resetAt: reset };
 }
 
