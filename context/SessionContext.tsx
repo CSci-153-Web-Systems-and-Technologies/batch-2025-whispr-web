@@ -5,8 +5,8 @@ import { useParams, useRouter } from 'next/navigation'
 import React, { createContext, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
-const WARNING_THRESHOLD = 60 * 10;
-const CRITICAL_THRESHOLD = 5
+const WARNING_THRESHOLD = 15;
+const CRITICAL_THRESHOLD = 5;
 
 export interface SessionContextType {
   sessionId: string
@@ -20,7 +20,7 @@ export interface SessionContextType {
   resetWarning: () => void
   setIsWaitingForOther: (value: boolean) => void
   setIsFeedbackOpen: React.Dispatch<React.SetStateAction<boolean>>
-  endSession: () => Promise<void> // Exposed for your "Leave Chat" button
+  endSession: () => Promise<void>
 }
 
 export const SessionContext = createContext<SessionContextType | null>(null)

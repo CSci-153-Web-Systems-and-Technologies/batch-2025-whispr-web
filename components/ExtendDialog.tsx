@@ -1,7 +1,7 @@
 import { useSession } from '@/hooks/use-session';
-import { Button } from './ui/button';
 import { Check, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from './ui/button';
 
 const ExtendDialog = () => {
   const { 
@@ -59,7 +59,7 @@ const ExtendDialog = () => {
   if (!showExtendDialog) return null;
 
   return (
-    <div className="flex items-center gap-3 bg-white p-5 -mt-1 border rounded-lg rounded-t-none mb-5">
+    <div className="flex max-sm:flex-col items-center gap-3 bg-white p-5 -mt-1 border rounded-lg rounded-t-none mb-5">
       <div className='flex flex-col flex-1'>
         <span className='font-medium text-base'>
           {isWaitingForOther ? 'Waiting for response...' : 'Extend this session?'}
@@ -71,14 +71,14 @@ const ExtendDialog = () => {
           }
         </span>
       </div>
-      <div className='flex gap-3 flex-1 justify-end'>
+      <div className='flex gap-3 flex-1 justify-end max-sm:w-full max-sm:mt-3'>
         {!isWaitingForOther  &&
           <>
-            <Button variant='secondary' size='lg' onClick={handleDecline}>
+            <Button variant='secondary' size='lg' onClick={handleDecline} className='max-sm:flex-1'>
               <X className='h-4 w-4'/>
               Decline
             </Button>
-            <Button size='lg' onClick={handleExtend}>
+            <Button size='lg' onClick={handleExtend} className='max-sm:flex-1'>
               <Check className='h-4 w-4'/>
               Extend Session
             </Button>
