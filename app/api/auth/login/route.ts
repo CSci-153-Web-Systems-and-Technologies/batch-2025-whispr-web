@@ -1,8 +1,20 @@
+import { checkLoginLimit, getClientIp } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 5 login attempts per 15 minutes per IP
+    const ip = getClientIp(request);
+    const { allowed } = await checkLoginLimit(ip);
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { anonId, password } = body;
 
