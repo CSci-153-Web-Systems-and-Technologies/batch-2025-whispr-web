@@ -6,8 +6,16 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "@/components/ui/empty";
 import { usePostsQuery } from '@/hooks/use-posts-query';
 import { createClient } from '@/utils/supabase/client';
+import { MessageCircleDashed } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface UserFeedProps {
@@ -38,6 +46,19 @@ const UserFeed = ({targetUserId}: UserFeedProps) => {
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
         {
+          posts.length === 0 ? (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon" className='bg-gray-200'>
+                  <MessageCircleDashed />
+                </EmptyMedia>
+                <EmptyTitle>It's quiet here...</EmptyTitle>
+                <EmptyDescription>
+                  Be the first to break the silence. Share your thoughts anonymously.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          ) :
           posts
             .filter(post => post.author_id === targetUserId)
             .map(post => {
