@@ -106,3 +106,41 @@ Ken Cedrick A. Jimeno
 ## Breaking Changes
 
 None (initial release)
+
+---
+---
+
+# Release v0.1.2 - Patch
+
+**Release Date:** December 13, 2025
+
+## Bug Fixes
+
+- Fixed viewport height issues on mobile browsers by changing `h-screen` to `h-dvh` on chat, login, register, and logout pages
+
+## Breaking Changes
+
+None
+
+---
+---
+
+# Release v0.1.3 - Patch
+
+**Release Date:** December 13, 2025  
+**Hotfix Branch:** `hotfix/ui-improvements-v0.1.3`
+
+## UI Improvements
+
+- Added shadow to auth form section for better visual depth
+- Increased horizontal padding on auth form container (`px-6` to `px-8`)
+- Improved mood check-in card layout alignment on larger screens (`justify-evenly`)
+- Adjusted profile page top margin for better spacing (`mt-10` to `mt-15`)
+
+## Bug Fixes
+
+- Added empty state for user feed when no posts exist, displaying a friendly "It's quiet here..." message with icon
+
+## Breaking Changes
+
+None

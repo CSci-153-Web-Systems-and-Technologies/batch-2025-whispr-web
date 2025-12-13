@@ -32,7 +32,7 @@ const page = () => {
   if(!userId || !anonId) return;
 
   return (
-    <div className='flex flex-col gap-5 p-6 mt-10 sm:p-15'>
+    <div className='flex flex-col gap-5 p-6 mt-15 sm:p-15'>
       <div className='flex max-sm:flex-col w-full '>
         <ProfileCard />
         <ActivitySummary targetUserId={userId} />

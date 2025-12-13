@@ -25,9 +25,9 @@ export default function AuthLayout({
       </div>
 
       {/* FORM SECTION */}
-      <div className="flex-1 flex justify-center max-sm:pt-4 sm:items-center">
+      <div className="flex-1 flex justify-center max-sm:pt-4 sm:items-center shadow-lg">
         {/* Form Holder */}
-        <div className="flex flex-col items-center gap-4 max-sm:flex-1 sm:h-max sm:w-120 rounded-4xl sm:rounded-lg py-10 px-6 sm:px-12 max-sm:rounded-b-none border bg-white shadow-md">
+        <div className="flex flex-col items-center gap-4 max-sm:flex-1 sm:h-max sm:w-120 rounded-4xl sm:rounded-lg py-10 px-8 sm:px-12 max-sm:rounded-b-none border bg-white shadow-md">
           {children}
         </div>
       </div>

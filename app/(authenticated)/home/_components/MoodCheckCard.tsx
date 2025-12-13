@@ -95,7 +95,7 @@ const MoodCheckCard = () => {
           <CardDescription>
             Remember, your feelings are valid. We're here when you need us.
           </CardDescription>
-          <CardContent className="flex items-center justify-between mt-4 h-25">
+          <CardContent className="flex items-center justify-between sm:justify-evenly mt-4 h-25">
             {
               isLoading ? (
                 <Loading />
