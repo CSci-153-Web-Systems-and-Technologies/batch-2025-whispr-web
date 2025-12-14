@@ -1,3 +1,4 @@
+import Loading from '@/app/loading';
 import PostCard from '@/components/PostCard';
 import {
   Card,
@@ -26,7 +27,7 @@ const UserFeed = ({targetUserId}: UserFeedProps) => {
   const supabase = createClient()
 
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const { posts, refetch } = usePostsQuery(false);
+  const { posts, isLoading, refetch } = usePostsQuery(false);
 
   useEffect(() => {
     const fetchCurrentUserId = async () => {
@@ -46,7 +47,9 @@ const UserFeed = ({targetUserId}: UserFeedProps) => {
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
         {
-          posts.length === 0 ? (
+          isLoading ? (
+            <Loading />
+          ) : posts.length === 0 ? (
             <Empty>
               <EmptyHeader>
                 <EmptyMedia variant="icon" className='bg-gray-200'>

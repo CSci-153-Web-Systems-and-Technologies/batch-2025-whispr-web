@@ -1,5 +1,6 @@
 "use client"
 
+import Loading from '@/app/loading';
 import { RealtimeChat } from '@/components/realtime-chat';
 import { useChatPartner } from '@/hooks/use-chat-partner';
 import { useCurrentUser } from '@/hooks/use-current-user';
@@ -150,7 +151,11 @@ export default function ChatPage({params}: ChatPageProps) {
     if (error) console.log('Error storing messages:', error);
   }
 
-  if (!currentUser || !partner || !currentUser.role) return null;
+  if (!currentUser || !partner || !currentUser.role) return (
+    <div className='flex flex-1 h-dvh items-center justify-center pt-20'>
+      <Loading />
+    </div>
+  );
 
   return (
     <div className='flex flex-1 h-dvh border pt-20'>
