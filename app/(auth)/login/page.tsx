@@ -2,6 +2,7 @@
 
 import FormField from '@/components/FormField'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -29,6 +30,8 @@ const Login = () => {
 
     setErrors(newErrors);
     if(Object.keys(newErrors).length > 0) return;
+
+    setIsLoading(true);
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -98,7 +101,16 @@ const Login = () => {
           />
         </div>
 
-        <Button type='submit' className='w-full mt-5 cursor-pointer'>Sign In</Button>
+        <Button type='submit' disabled={isLoading} className='w-full mt-5 cursor-pointer'>
+          {isLoading ? (
+            <>
+              <Spinner />
+              Signing In...
+            </>
+          ) : (
+            "Sign In"
+          )}
+        </Button>
       </form>
 
       <div className='flex items-center justify-center gap-2 w-full text-sm mt-10'>

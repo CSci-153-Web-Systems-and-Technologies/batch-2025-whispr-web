@@ -1,12 +1,13 @@
 "use client"
 
+import Loading from '@/app/loading'
 import PostCard from '@/components/PostCard'
 import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle
 } from "@/components/ui/empty"
 import { usePostsQuery } from '@/hooks/use-posts-query'
 import { Post } from '@/types'
@@ -14,7 +15,7 @@ import { MessageCircleDashed } from 'lucide-react'
 import PostInput from './PostInput'
 
 const CommunityWall = () => {
-  const { posts, refetch } = usePostsQuery();
+  const { posts, isLoading, refetch } = usePostsQuery();
 
 
   return (
@@ -29,7 +30,11 @@ const CommunityWall = () => {
       <div className='flex flex-col gap-4 p-4'>
         <PostInput onPostChange={refetch} />
         {
-          posts.length === 0 ? (
+          isLoading ? (
+            <div className='py-10'>
+              <Loading />
+            </div>
+          ) : posts.length === 0 ? (
             <Empty>
               <EmptyHeader>
                 <EmptyMedia variant="icon" className='bg-gray-200'>

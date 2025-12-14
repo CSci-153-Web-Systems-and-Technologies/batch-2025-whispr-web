@@ -2,13 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardAction,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -142,6 +142,7 @@ const InteractionCard = () => {
             <Button 
               className='w-full h-11 text-base' 
               onClick={() => handleMatching('venter')}
+              disabled={showWaitingDialog}
             >
               <Search />
               Venter
@@ -152,6 +153,7 @@ const InteractionCard = () => {
               variant="secondary" 
               className='w-full h-11 text-base' 
               onClick={() => handleMatching('listener')}
+              disabled={showWaitingDialog}
             >
               <Heart fill='black' />
               Listener

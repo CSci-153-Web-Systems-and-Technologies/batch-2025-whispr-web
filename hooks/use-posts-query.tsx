@@ -9,8 +9,10 @@ import { toast } from "sonner";
 export function usePostsQuery(getNearby: boolean = true) {
   const supabase = createClient();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPosts = async () => {
+    setIsLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -70,11 +72,12 @@ export function usePostsQuery(getNearby: boolean = true) {
     }));
 
     setPosts(formattedPosts);
+    setIsLoading(false);
   }
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  return { posts, refetch: fetchPosts }
+  return { posts, isLoading, refetch: fetchPosts }
 }

@@ -125,10 +125,9 @@ None
 ---
 ---
 
-# Release v0.1.3 - Patch
+# Release v1.0.3 - Patch
 
 **Release Date:** December 13, 2025  
-**Hotfix Branch:** `hotfix/ui-improvements-v0.1.3`
 
 ## UI Improvements
 
